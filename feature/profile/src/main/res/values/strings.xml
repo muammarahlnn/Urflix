@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile">Profile</string>
+    <string name="profile_info">Profile Information</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="edit_data">Edit data</string>
+    <string name="change_photo_profile">Change photo profile</string>
 </resources>
