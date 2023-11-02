@@ -2,8 +2,13 @@
 <resources>
     <string name="profile">Profile</string>
     <string name="profile_info">Profile Information</string>
-    <string name="full_name">Full Name</string>
+    <string name="full_name">Full name</string>
     <string name="email">Email</string>
     <string name="edit_data">Edit data</string>
     <string name="change_photo_profile">Change photo profile</string>
+    <string name="change_profile_data">Change profile data</string>
+    <string name="change">Change</string>
+    <string name="cancel">Cancel</string>
+    <string name="guest_full_name">Guest</string>
+    <string name="guest_email">No email yet</string>
 </resources>
