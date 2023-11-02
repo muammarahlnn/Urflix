@@ -34,13 +34,14 @@ interface MovieApi {
 
     companion object {
 
-        private const val GET_NOW_PLAYING_MOVIES = "/movie/now_playing"
+        private const val GET_NOW_PLAYING_MOVIES = "movie/now_playing"
 
-        private const val GET_UPCOMING_MOVIES = "/movie/upcoming"
+        private const val GET_UPCOMING_MOVIES = "movie/upcoming"
 
-        private const val GET_POPULAR_MOVIES = "/movie/popular"
 
-        private const val GET_TOP_RATED_MOVIES = "/movie/top_rated"
+        private const val GET_POPULAR_MOVIES = "movie/popular"
+
+        private const val GET_TOP_RATED_MOVIES = "movie/top_rated"
 
         private const val QUERY_PAGE = "page"
     }

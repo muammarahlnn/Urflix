@@ -34,13 +34,13 @@ interface TvShowApi {
 
     companion object {
 
-        private const val GET_AIRING_TODAY_TV_SHOWS = "/tv/airing_today"
+        private const val GET_AIRING_TODAY_TV_SHOWS = "tv/airing_today"
 
-        private const val GET_ON_THE_AIR_TV_SHOWS = "/tv/on_the_air"
+        private const val GET_ON_THE_AIR_TV_SHOWS = "tv/on_the_air"
 
-        private const val GET_POPULAR_TV_SHOWS = "/tv/popular"
+        private const val GET_POPULAR_TV_SHOWS = "tv/popular"
 
-        private const val GET_TOP_RATED_TV_SHOWS = "/tv/top_rated"
+        private const val GET_TOP_RATED_TV_SHOWS = "tv/top_rated"
 
         private const val QUERY_PAGE = "page"
     }

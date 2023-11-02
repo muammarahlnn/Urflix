@@ -1,6 +1,7 @@
 package com.muammarahlnn.homenavigator
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,7 +64,9 @@ private fun HomeNavigator(
     ) { padding ->
         HomeNavHost(
             state = state,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
         )
     }
 }
