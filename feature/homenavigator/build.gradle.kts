@@ -8,5 +8,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:home"))
+    implementation(project(":feature:search"))
+    implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:profile"))
+
     implementation(libs.androidx.activity.compose)
 }

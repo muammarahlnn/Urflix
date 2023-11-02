@@ -17,7 +17,9 @@ val DarkColorScheme = darkColorScheme(
     background = Navy20,
     onBackground = White50,
     surface = Navy20,
+    onSurface = Gray50,
     surfaceVariant = Navy30,
+    onSurfaceVariant = Gray80,
 )
 
 @Composable
