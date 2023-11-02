@@ -1,6 +1,5 @@
 package com.muammarahlnn.urflix.core.data.repository
 
-import com.muammarahlnn.urflix.core.datastore.model.UserEntity
 import com.muammarahlnn.urflix.core.model.data.UserModel
 import kotlinx.coroutines.flow.Flow
 
@@ -16,5 +15,5 @@ interface ProfileRepository {
         email: String,
     )
 
-    fun getUser(user: UserModel): Flow<UserModel>
+    fun getUser(): Flow<UserModel>
 }

@@ -26,7 +26,7 @@ class ProfileRepositoryImpl @Inject constructor(
             )
         )
 
-    override fun getUser(user: UserModel): Flow<UserModel> =
+    override fun getUser(): Flow<UserModel> =
         urflixPreferences.getUser().map {
             it.toUserModel()
         }
