@@ -15,8 +15,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply {
-                apply("garamqu.android.library")
-                apply("garamqu.android.hilt")
+                apply("urflix.android.library")
+                apply("urflix.android.hilt")
             }
 
             extensions.configure<LibraryExtension> {
