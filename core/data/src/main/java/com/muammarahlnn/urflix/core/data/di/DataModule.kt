@@ -1,7 +1,9 @@
 package com.muammarahlnn.urflix.core.data.di
 
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
+import com.muammarahlnn.urflix.core.data.repository.ProfileRepository
 import com.muammarahlnn.urflix.core.data.repository.impl.HomeRepositoryImpl
+import com.muammarahlnn.urflix.core.data.repository.impl.ProfileRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,4 +22,9 @@ interface DataModule {
     fun bindsHomeRepository(
         homeRepository: HomeRepositoryImpl
     ): HomeRepository
+
+    @Binds
+    fun bindsProfileRepository(
+        profileRepository: ProfileRepositoryImpl
+    ): ProfileRepository
 }
