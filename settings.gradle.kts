@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Urflix"
 include(":app")
+include(":core:designsystem")
