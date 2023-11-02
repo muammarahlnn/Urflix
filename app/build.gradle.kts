@@ -36,6 +36,9 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":core:designsystem"))
+
+    implementation(project(":feature:homenavigator"))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
