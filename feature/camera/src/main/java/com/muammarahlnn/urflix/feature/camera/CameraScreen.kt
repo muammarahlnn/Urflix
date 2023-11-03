@@ -25,9 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -195,7 +192,7 @@ private fun CameraPreview(
                     .align(Alignment.TopStart)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Close,
+                    imageVector = UrflixIcons.Clear,
                     contentDescription = stringResource(id = R.string.close_camera),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
@@ -341,7 +338,7 @@ private fun PhotoTakenPreview(
                     .align(Alignment.TopStart)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Close,
+                    imageVector = UrflixIcons.Clear,
                     contentDescription = stringResource(id = R.string.close_camera),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
@@ -359,7 +356,7 @@ private fun PhotoTakenPreview(
                 onClick = onRetakeClick,
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Close,
+                    imageVector = UrflixIcons.Clear,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(48.dp)
@@ -373,7 +370,7 @@ private fun PhotoTakenPreview(
                 },
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Check,
+                    imageVector = UrflixIcons.Check,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(48.dp)
