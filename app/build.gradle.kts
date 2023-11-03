@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":core:designsystem"))
 
     implementation(project(":feature:homenavigator"))
+    implementation(project(":feature:camera"))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
