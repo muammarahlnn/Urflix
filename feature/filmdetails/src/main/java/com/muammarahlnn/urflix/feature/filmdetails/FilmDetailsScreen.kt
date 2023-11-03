@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -40,13 +41,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import com.muammarahlnn.urflix.core.designsystem.R as designSystemR
+import com.muammarahlnn.urflix.core.designsystem.component.BaseAsyncImage
 import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
 import com.muammarahlnn.urflix.core.designsystem.component.ErrorScreen
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
@@ -162,10 +165,8 @@ private fun FilmDetailsHeaderInfo(
                 onBookmarkClick(filmDetails)
             },
         )
-        AsyncImage(
+        BaseAsyncImage(
             model = filmDetails.posterImage,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .padding(
                     top = backdropImageCarouselHeight - (backdropImageCarouselHeight / 5),
@@ -206,25 +207,32 @@ private fun FilmDetailsCarousel(
             .fillMaxWidth()
             .height(backdropImageCarouselHeight)
     ) {
-        HorizontalPager(
-            state = pagerState,
-            modifier = modifier.fillMaxSize()
-        ) { index ->
-            AsyncImage(
-                model = backdrops[index].fileImage,
+        if (backdrops.isNotEmpty()) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = modifier.fillMaxSize()
+            ) { index ->
+                BaseAsyncImage(
+                    model = backdrops[index].fileImage,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            CarouselIndexIndicator(
+                totalIndex = backdrops.size,
+                selectedIndex = pagerState.currentPage,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            )
+        } else {
+            Image(
+                painter = painterResource(id = designSystemR.drawable.error_image_placeholder),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         }
-
-        CarouselIndexIndicator(
-            totalIndex = backdrops.size,
-            selectedIndex = pagerState.currentPage,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        )
 
         val headerIconModifier = Modifier
             .padding(16.dp)
@@ -452,6 +460,8 @@ private val posterImageHeight = 175.dp
 private val posterImageWidth = 125.dp
 
 private fun formatDate(inputDate: String): String {
+    if (inputDate.isEmpty()) return "-"
+
     val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     val outputFormat = SimpleDateFormat("MMM yyyy", Locale.US)
     val date: Date = inputFormat.parse(inputDate) as Date

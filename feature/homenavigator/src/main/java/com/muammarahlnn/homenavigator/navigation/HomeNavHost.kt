@@ -32,7 +32,9 @@ internal fun HomeNavHost(
         homeScreen(
             onFilmClick = onFilmClick,
         )
-        searchScreen()
+        searchScreen(
+            onFilmClick = onFilmClick,
+        )
         bookmarksScreen(
             onFilmClick = onFilmClick,
         )

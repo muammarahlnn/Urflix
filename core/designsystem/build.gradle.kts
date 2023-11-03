@@ -19,5 +19,9 @@ dependencies {
     api(libs.androidx.compose.ui.util)
     api(libs.androidx.compose.material.iconsExtended)
 
+    implementation(project(":core:model"))
+
     implementation(libs.androidx.core.ktx)
+    implementation(libs.coil.kt)
+    implementation(libs.coil.kt.compose)
 }

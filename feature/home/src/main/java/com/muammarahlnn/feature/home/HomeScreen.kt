@@ -184,7 +184,7 @@ private fun FilmsSectionHorizontalList(
             }
         }
 
-        is FilmsSectionUiState.Error -> TODO()
+        is FilmsSectionUiState.Error -> Unit
     }
 }
 
