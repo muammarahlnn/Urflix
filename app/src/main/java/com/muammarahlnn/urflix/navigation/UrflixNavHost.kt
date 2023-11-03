@@ -11,6 +11,8 @@ import com.muammarahlnn.homenavigator.navigation.HOME_NAVIGATOR_ROUTE
 import com.muammarahlnn.homenavigator.navigation.homeNavigator
 import com.muammarahlnn.urflix.feature.camera.navigation.cameraScreen
 import com.muammarahlnn.urflix.feature.camera.navigation.navigateToCamera
+import com.muammarahlnn.urflix.feature.filmdetails.navigation.filmsDetailsScreen
+import com.muammarahlnn.urflix.feature.filmdetails.navigation.navigateToFilmDetails
 
 
 /**
@@ -53,8 +55,10 @@ internal fun UrflixNavHost(
         modifier = modifier,
     ) {
         homeNavigator(
+            onFilmClick = navController::navigateToFilmDetails,
             onCameraActionClick = navController::navigateToCamera
         )
+        filmsDetailsScreen()
         cameraScreen(
             onCameraClosed = navController::navigateUp
         )

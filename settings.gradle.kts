@@ -32,3 +32,4 @@ include(":feature:search")
 include(":feature:bookmarks")
 include(":feature:camera")
 
+include(":feature:filmdetails")

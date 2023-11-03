@@ -40,6 +40,7 @@ dependencies {
 
     implementation(project(":feature:homenavigator"))
     implementation(project(":feature:camera"))
+    implementation(project(":feature:filmdetails"))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)

@@ -29,10 +29,12 @@ import com.muammarahlnn.urflix.core.designsystem.component.UrflixNavigationBarIt
  */
 @Composable
 internal fun HomeNavigatorRoute(
+    onFilmClick: () -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HomeNavigator(
+        onFilmClick = onFilmClick,
         onCameraActionClick = onCameraActionClick,
         modifier = modifier,
     )
@@ -40,6 +42,7 @@ internal fun HomeNavigatorRoute(
 
 @Composable
 private fun HomeNavigator(
+    onFilmClick: () -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     state: HomeNavigatorState = rememberHomeNavigatorState(),
@@ -67,6 +70,7 @@ private fun HomeNavigator(
     ) { padding ->
         HomeNavHost(
             state = state,
+            onFilmClick = onFilmClick,
             onCameraActionClick = onCameraActionClick,
             modifier = Modifier
                 .fillMaxSize()

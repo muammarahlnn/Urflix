@@ -1,5 +1,6 @@
 package com.muammarahlnn.feature.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,7 @@ import com.muammarahlnn.urflix.feature.home.R
  */
 @Composable
 internal fun HomeRoute(
+    onFilmClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -98,6 +100,7 @@ internal fun HomeRoute(
     HomeScreen(
         moviesSectionsUiData = moviesSectionsUiData,
         tvShowsSectionsUiData = tvShowsSectionsUiData,
+        onFilmClick = onFilmClick,
         modifier = modifier,
     )
 }
@@ -106,6 +109,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     moviesSectionsUiData: List<MoviesSectionUiData>,
     tvShowsSectionsUiData: List<TvShowsSectionUiData>,
+    onFilmClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -126,6 +130,7 @@ private fun HomeScreen(
             item {
                 FilmsSectionHorizontalList(
                     uiState = moviesSectionUiData.uiState,
+                    onFilmClick = onFilmClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
@@ -144,6 +149,7 @@ private fun HomeScreen(
             item {
                 FilmsSectionHorizontalList(
                     uiState = tvShowsSectionUiData.uiState,
+                    onFilmClick = onFilmClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
@@ -156,6 +162,7 @@ private fun HomeScreen(
 @Composable
 private fun FilmsSectionHorizontalList(
     uiState: FilmsSectionUiState,
+    onFilmClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -177,7 +184,10 @@ private fun FilmsSectionHorizontalList(
                     items = uiState.films,
                     key = { it.id },
                 ) { film ->
-                    FilmItemCard(film = film)
+                    FilmItemCard(
+                        film = film,
+                        onFilmClick = onFilmClick,
+                    )
                 }
             }
         }
@@ -224,11 +234,17 @@ private fun FilmsSectionHeader(
 }
 
 @Composable
-private fun FilmItemCard(film: FilmModel) {
+private fun FilmItemCard(
+    film: FilmModel,
+    onFilmClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .width(120.dp)
             .height(filmItemHeight)
+            .clickable {
+                onFilmClick()
+            }
     ) {
         Card(
             shape = RoundedCornerShape(10.dp),
