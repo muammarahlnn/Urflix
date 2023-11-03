@@ -45,7 +45,7 @@ class FilmDetailsViewModel @Inject constructor(
         fetchFilmDetailsData()
     }
 
-    private fun fetchFilmDetailsData() {
+    fun fetchFilmDetailsData() {
         when (filmType) {
             FilmType.MOVIES -> fetchMovieDetailsData()
             FilmType.TV_SHOWS -> fetchTvShowDetailsData()
