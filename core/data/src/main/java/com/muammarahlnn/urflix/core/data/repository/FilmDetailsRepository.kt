@@ -13,4 +13,10 @@ interface FilmDetailsRepository {
     fun getMovieDetails(movieId: Int): Flow<FilmDetailsModel>
 
     fun getTvShowDetails(tvShowId: Int): Flow<FilmDetailsModel>
+
+    fun isFilmBookmarked(filmId: Int): Flow<Boolean>
+
+    suspend fun insertBookmarkedFilm(film: FilmDetailsModel)
+
+    suspend fun deleteBookmarkedFilm(filmId: Int)
 }

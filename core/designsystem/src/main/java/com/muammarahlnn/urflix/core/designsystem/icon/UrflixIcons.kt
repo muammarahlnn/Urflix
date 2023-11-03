@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cameraswitch
 import androidx.compose.material.icons.rounded.Edit
@@ -66,6 +67,8 @@ object UrflixIcons {
     val ArrowBack = Icons.Rounded.ArrowBack
 
     val Bookmark = Icons.Rounded.Bookmark
+
+    val BookmarkBorder = Icons.Rounded.BookmarkBorder
 
     val Movie = Icons.Rounded.Movie
 

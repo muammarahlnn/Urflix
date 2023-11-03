@@ -24,7 +24,6 @@ fun MovieResponse.toFilmModel() = FilmModel(
     releaseDate = releaseDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toPosterImage().orEmpty(),
-    backdropImage = backdropPath?.toPosterImage().orEmpty(),
     genreIds = genreIds ?: listOf(),
     filmType = FilmType.MOVIES,
 )
@@ -41,7 +40,6 @@ fun TvShowResponse.toFilmModel() = FilmModel(
     releaseDate = firstAirDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toPosterImage().orEmpty(),
-    backdropImage = backdropPath?.toPosterImage().orEmpty(),
     genreIds = genreIds ?: listOf(),
     filmType = FilmType.TV_SHOWS,
 )

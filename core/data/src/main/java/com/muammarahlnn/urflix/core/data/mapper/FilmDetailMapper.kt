@@ -1,8 +1,10 @@
 package com.muammarahlnn.urflix.core.data.mapper
 
+import com.muammarahlnn.urflix.core.database.model.FilmEntity
 import com.muammarahlnn.urflix.core.model.data.FilmDetailsModel
 import com.muammarahlnn.urflix.core.model.data.GenreModel
 import com.muammarahlnn.urflix.core.model.data.ImageModel
+import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
 import com.muammarahlnn.urflix.core.network.model.response.ImageResponse
 import com.muammarahlnn.urflix.core.network.model.response.MovieDetailsResponse
@@ -26,7 +28,8 @@ fun MovieDetailsResponse.toFilmDetailsModel(
     overview = overview.orEmpty(),
     posterImage = posterPath?.toPosterImage().orEmpty(),
     backdrops = backdrops?.toImageModels() ?: listOf(),
-    genres = genres?.toGenreModels() ?: listOf()
+    genres = genres?.toGenreModels() ?: listOf(),
+    filmType = FilmType.MOVIES,
 )
 
 @JvmName("TvShowDetailsResponseToFilmDetailsModel")
@@ -41,7 +44,17 @@ fun TvShowDetailsResponse.toFilmDetailsModel(
     overview = overview.orEmpty(),
     posterImage = posterPath?.toPosterImage().orEmpty(),
     backdrops = backdrops?.toImageModels() ?: listOf(),
-    genres = genres?.toGenreModels() ?: listOf()
+    genres = genres?.toGenreModels() ?: listOf(),
+    filmType = FilmType.TV_SHOWS,
+)
+
+fun FilmDetailsModel.toFilmEntity() = FilmEntity(
+    filmId = id,
+    title = title,
+    releaseDate = releaseDate,
+    voteAverage = voteAverage,
+    posterImage = posterImage,
+    filmTypeOrdinal = filmType.ordinal,
 )
 
 fun List<ImageResponse>.toImageModels() = map {
