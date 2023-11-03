@@ -1,6 +1,7 @@
 package com.muammarahlnn.urflix.core.data.mapper
 
 import com.muammarahlnn.urflix.core.model.data.FilmModel
+import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.core.network.BuildConfig
 import com.muammarahlnn.urflix.core.network.model.response.MovieResponse
 import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
@@ -24,7 +25,8 @@ fun MovieResponse.toFilmModel() = FilmModel(
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toOverviewImage().orEmpty(),
     backdropImage = backdropPath?.toOverviewImage().orEmpty(),
-    genreIds = genreIds ?: listOf()
+    genreIds = genreIds ?: listOf(),
+    filmType = FilmType.MOVIES,
 )
 
 @JvmName("TvShowResponsesToFilmModels")
@@ -40,7 +42,8 @@ fun TvShowResponse.toFilmModel() = FilmModel(
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toOverviewImage().orEmpty(),
     backdropImage = backdropPath?.toOverviewImage().orEmpty(),
-    genreIds = genreIds ?: listOf()
+    genreIds = genreIds ?: listOf(),
+    filmType = FilmType.TV_SHOWS,
 )
 
 fun String.toOverviewImage() =
