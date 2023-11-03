@@ -11,6 +11,8 @@ import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.Cameraswitch
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.FlashOff
 import androidx.compose.material.icons.rounded.FlashOn
@@ -77,4 +79,8 @@ object UrflixIcons {
     val Star = Icons.Rounded.Star
 
     val Refresh = Icons.Rounded.Refresh
+
+    val Clear = Icons.Rounded.Clear
+
+    val Check = Icons.Rounded.Check
 }

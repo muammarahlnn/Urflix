@@ -24,13 +24,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import com.muammarahlnn.urflix.core.designsystem.component.BaseAsyncImage
 import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
 import com.muammarahlnn.urflix.core.designsystem.component.ErrorScreen
 import com.muammarahlnn.urflix.core.designsystem.component.NoDataScreen
@@ -126,10 +125,8 @@ private fun BookmarkedFilmCard(
                 )
             }
     ) {
-        AsyncImage(
+        BaseAsyncImage(
             model = film.posterImage,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(80.dp),

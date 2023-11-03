@@ -4,10 +4,12 @@ import com.muammarahlnn.urflix.core.data.repository.BookmarksRepository
 import com.muammarahlnn.urflix.core.data.repository.FilmDetailsRepository
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.data.repository.ProfileRepository
+import com.muammarahlnn.urflix.core.data.repository.SearchRepository
 import com.muammarahlnn.urflix.core.data.repository.impl.BookmarksRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.FilmDetailsRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.HomeRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.ProfileRepositoryImpl
+import com.muammarahlnn.urflix.core.data.repository.impl.SearchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,7 +40,12 @@ interface DataModule {
     ): FilmDetailsRepository
 
     @Binds
-    fun bindsBookmakrsRepository(
+    fun bindsBookmarksRepository(
         bookmarksRepository: BookmarksRepositoryImpl
     ): BookmarksRepository
+
+    @Binds
+    fun bindsSearchRepository(
+        searchRepository: SearchRepositoryImpl
+    ): SearchRepository
 }

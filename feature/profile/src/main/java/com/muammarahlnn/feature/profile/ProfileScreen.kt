@@ -53,7 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import com.muammarahlnn.urflix.core.designsystem.component.BaseAsyncImage
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
 import com.muammarahlnn.urflix.core.designsystem.util.getFilePhoto
 import com.muammarahlnn.urflix.core.designsystem.util.isPhotoExists
@@ -323,10 +323,8 @@ private fun PhotoProfile(
                 modifier = photoProfileModifier
             )
         } else {
-            AsyncImage(
+            BaseAsyncImage(
                 model = photoProfileUri,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
                 modifier = photoProfileModifier
             )
         }

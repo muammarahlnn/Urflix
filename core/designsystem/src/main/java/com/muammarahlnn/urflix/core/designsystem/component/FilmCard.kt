@@ -1,6 +1,5 @@
 package com.muammarahlnn.urflix.core.designsystem.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.muammarahlnn.urflix.core.designsystem.theme.BlackTrans60
+import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 
 
@@ -31,16 +29,16 @@ import com.muammarahlnn.urflix.core.model.data.FilmModel
  */
 @Composable
 fun FilmItemCard(
-    width: Dp,
-    height: Dp,
     film: FilmModel,
     onFilmClick: (Int, Int) -> Unit,
+    width: Dp = 125.dp,
+    height: Dp = 200.dp,
 ) {
     Column(
         modifier = Modifier
             .width(width)
             .height(height)
-            .clickable {
+            .noRippleClickable {
                 onFilmClick(
                     film.id,
                     film.filmType.ordinal
@@ -52,11 +50,9 @@ fun FilmItemCard(
             modifier = Modifier.weight(1.6f)
         ) {
             Box {
-                AsyncImage(
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
+                BaseAsyncImage(
                     model = film.posterImage,
-                    contentDescription = null
+                    modifier = Modifier.fillMaxSize(),
                 )
                 Card(
                     shape = RoundedCornerShape(bottomStart = 10.dp),
@@ -70,8 +66,10 @@ fun FilmItemCard(
                         text = formattedVoteAverage,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(
+                            horizontal = 9.dp,
+                            vertical = 3.dp
+                        )
                     )
                 }
             }
