@@ -93,7 +93,7 @@ private fun FilmDetailsHeaderInfo(
             contentDescription = null,
             modifier = Modifier
                 .padding(
-                    top = backdropImageCarouselHeight - (backdropImageCarouselHeight / 4),
+                    top = backdropImageCarouselHeight - (backdropImageCarouselHeight / 5),
                     start = 16.dp,
                 )
                 .clip(RoundedCornerShape(10.dp))
@@ -252,6 +252,26 @@ private fun FilmDetailsDataContent(
 
             Text(
                 text = "104 mins",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            Icon(
+                imageVector = UrflixIcons.Star,
+                contentDescription = stringResource(id = R.string.rating),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp)
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Text(
+                text = "8.8",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
