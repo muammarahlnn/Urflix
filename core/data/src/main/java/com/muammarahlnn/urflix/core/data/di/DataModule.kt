@@ -1,8 +1,10 @@
 package com.muammarahlnn.urflix.core.data.di
 
+import com.muammarahlnn.urflix.core.data.repository.BookmarksRepository
 import com.muammarahlnn.urflix.core.data.repository.FilmDetailsRepository
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.data.repository.ProfileRepository
+import com.muammarahlnn.urflix.core.data.repository.impl.BookmarksRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.FilmDetailsRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.HomeRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.ProfileRepositoryImpl
@@ -34,4 +36,9 @@ interface DataModule {
     fun bindsFilmDetailsRepository(
         filmDetailsRepository: FilmDetailsRepositoryImpl
     ): FilmDetailsRepository
+
+    @Binds
+    fun bindsBookmakrsRepository(
+        bookmarksRepository: BookmarksRepositoryImpl
+    ): BookmarksRepository
 }

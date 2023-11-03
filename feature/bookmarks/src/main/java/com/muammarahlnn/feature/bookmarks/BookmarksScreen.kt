@@ -19,13 +19,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
+import com.muammarahlnn.urflix.core.designsystem.component.ErrorScreen
+import com.muammarahlnn.urflix.core.designsystem.component.NoDataScreen
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
+import com.muammarahlnn.urflix.core.model.data.FilmModel
+import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.feature.bookmarks.R
 
 
@@ -36,32 +46,63 @@ import com.muammarahlnn.urflix.feature.bookmarks.R
 @Composable
 internal fun BookmarksRoute(
     modifier: Modifier = Modifier,
+    viewModel: BookmarksViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.bookmarksUiState.collectAsStateWithLifecycle()
     BookmarksScreen(
+        uiState = uiState,
+        onRefresh = viewModel::loadBookmarkedFilms,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun BookmarksScreen(
+    uiState: BookmarksUiState,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val test = (1..10).toList()
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize()
-    ) {
-        items(
-            items = test,
-        ) {
-            BookmarkedFilmCard()
+    when (uiState) {
+        BookmarksUiState.Loading -> {
+            CircularLoading(
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        is BookmarksUiState.Success -> {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = modifier.fillMaxSize()
+            ) {
+                items(
+                    items = uiState.films,
+                ) { film ->
+                    BookmarkedFilmCard(film)
+                }
+            }
+        }
+
+        is BookmarksUiState.SuccessEmpty -> {
+            NoDataScreen(
+                text = uiState.message,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        is BookmarksUiState.Error -> {
+            ErrorScreen(
+                text = uiState.message,
+                onRefresh = onRefresh,
+                modifier = modifier.fillMaxSize()
+            )
         }
     }
 }
 
 @Composable
 private fun BookmarkedFilmCard(
+    film: FilmModel,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -71,11 +112,13 @@ private fun BookmarkedFilmCard(
             .height(80.dp)
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Box(
+        AsyncImage(
+            model = film.posterImage,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxHeight()
-                .width(80.dp)
-                .background(MaterialTheme.colorScheme.primary)
+                .width(80.dp),
         )
 
         Column(
@@ -84,14 +127,14 @@ private fun BookmarkedFilmCard(
                 .padding(8.dp)
         ) {
             Text(
-                text = "Guardians of the Galaxy",
+                text = film.title,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = "2023",
+                text = formatToYear(film.releaseDate),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -104,12 +147,15 @@ private fun BookmarkedFilmCard(
                         topStart = 10.dp
                     )
                 )
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.secondary)
                 .align(Alignment.Bottom)
                 .padding(4.dp)
         ) {
             Icon(
-                imageVector = UrflixIcons.Movie,
+                imageVector = when (film.filmType) {
+                    FilmType.MOVIES -> UrflixIcons.Movie
+                    FilmType.TV_SHOWS -> UrflixIcons.Tv
+                },
                 contentDescription = stringResource(id = R.string.movie),
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.align(Alignment.Center)
@@ -117,3 +163,6 @@ private fun BookmarkedFilmCard(
         }
     }
 }
+
+private fun formatToYear(date: String): String =
+    if (date.isNotEmpty()) date.substring(0, 4) else "-"
