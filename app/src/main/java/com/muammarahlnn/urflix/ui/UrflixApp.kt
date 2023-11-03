@@ -21,7 +21,7 @@ import com.muammarahlnn.urflix.navigation.UrflixNavHost
 internal fun UrflixApp() {
     UrflixBackground {
         val systemUiController = rememberSystemUiController()
-        val statusBarColor = MaterialTheme.colorScheme.surfaceVariant
+        val statusBarColor = MaterialTheme.colorScheme.background
         LaunchedEffect(systemUiController, statusBarColor) {
             systemUiController.setStatusBarColor(
                 color = statusBarColor,
