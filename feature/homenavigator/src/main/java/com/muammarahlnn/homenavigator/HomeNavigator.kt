@@ -1,7 +1,9 @@
 package com.muammarahlnn.homenavigator
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,14 +15,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.muammarahlnn.homenavigator.navigation.HomeDestination
 import com.muammarahlnn.homenavigator.navigation.HomeNavHost
 import com.muammarahlnn.urflix.core.designsystem.component.UrflixNavigationBar
 import com.muammarahlnn.urflix.core.designsystem.component.UrflixNavigationBarItem
+import com.muammarahlnn.urflix.feature.homenavigator.R
 
 
 /**
@@ -54,9 +60,12 @@ private fun HomeNavigator(
         topBar = {
             val destination = state.currentHomeDestination
             if (destination != null) {
-                HomeNavigatorTopAppBar(
-                    titleId = destination.titleTextId
-                )
+                when (destination) {
+                    HomeDestination.HOME -> UrflixLogoTopAppBar()
+                    else -> HomeNavigatorTopAppBar(
+                        titleId = destination.titleTextId
+                    )
+                }
             }
         },
         bottomBar = {
@@ -81,7 +90,25 @@ private fun HomeNavigator(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeNavigatorTopAppBar(
+private fun UrflixLogoTopAppBar() {
+    CenterAlignedTopAppBar(
+        title = {
+            Image(
+                painter = painterResource(id = R.drawable.urflix_logo),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.height(42.dp)
+            )
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeNavigatorTopAppBar(
     titleId: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -89,13 +116,13 @@ fun HomeNavigatorTopAppBar(
         title = {
             Text(
                 text = stringResource(id = titleId),
-                style = MaterialTheme.typography.titleSmall.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.SemiBold
                 ),
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.onBackground,
         ),
         modifier = modifier,
