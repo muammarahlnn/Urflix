@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TvShowDetailsResponse(
     val id: Int,
-    val title: String,
+    val name: String,
     @SerialName("first_air_date") val firstAirDate: String? = null,
     @SerialName("vote_average") val voteAverage: Float? = null,
     val runtime: Int? = null,

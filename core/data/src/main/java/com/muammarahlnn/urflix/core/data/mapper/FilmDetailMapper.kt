@@ -37,7 +37,7 @@ fun TvShowDetailsResponse.toFilmDetailsModel(
     backdrops: List<ImageResponse>?
 ) = FilmDetailsModel(
     id = id,
-    title = title,
+    title = name,
     releaseDate = firstAirDate.orEmpty(),
     duration = runtime ?: 0,
     voteAverage = voteAverage ?: 0f,
