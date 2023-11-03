@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_icon_desc">Back</string>
+    <string name="bookmark_icon_desc">Save film</string>
+    <string name="bullet">•</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+</resources>

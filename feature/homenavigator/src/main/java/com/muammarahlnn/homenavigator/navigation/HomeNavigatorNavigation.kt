@@ -12,10 +12,12 @@ import com.muammarahlnn.homenavigator.HomeNavigatorRoute
 const val HOME_NAVIGATOR_ROUTE = "home_navigator_route"
 
 fun NavGraphBuilder.homeNavigator(
+    onFilmClick: () -> Unit,
     onCameraActionClick: () -> Unit,
 ) {
     composable(route = HOME_NAVIGATOR_ROUTE) {
         HomeNavigatorRoute(
+            onFilmClick = onFilmClick,
             onCameraActionClick = onCameraActionClick,
         )
     }

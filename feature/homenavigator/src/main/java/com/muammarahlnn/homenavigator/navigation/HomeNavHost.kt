@@ -18,6 +18,7 @@ import com.muammarahlnn.homenavigator.HomeNavigatorState
 @Composable
 internal fun HomeNavHost(
     state: HomeNavigatorState,
+    onFilmClick: () -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     startDestination: String = HOME_ROUTE,
@@ -28,7 +29,9 @@ internal fun HomeNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        homeScreen()
+        homeScreen(
+            onFilmClick = onFilmClick,
+        )
         searchScreen()
         bookmarksScreen()
         profileScreen(
