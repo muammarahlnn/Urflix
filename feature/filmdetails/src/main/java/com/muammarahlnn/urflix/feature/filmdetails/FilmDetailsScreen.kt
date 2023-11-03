@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
+import com.muammarahlnn.urflix.core.designsystem.component.ErrorScreen
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
 import com.muammarahlnn.urflix.core.designsystem.theme.BlackTrans60
 import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
@@ -71,6 +72,7 @@ internal fun FilmDetailsRoute(
     FilmDetailsScreen(
         uiState = uiState,
         onBackClick = onBackClick,
+        onRefresh = viewModel::fetchFilmDetailsData,
         modifier = modifier,
     )
 }
@@ -79,6 +81,7 @@ internal fun FilmDetailsRoute(
 fun FilmDetailsScreen(
     uiState: FilmDetailsUiState,
     onBackClick: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -107,7 +110,13 @@ fun FilmDetailsScreen(
             }
         }
 
-        is FilmDetailsUiState.Error -> TODO()
+        is FilmDetailsUiState.Error -> {
+            ErrorScreen(
+                text = uiState.message,
+                onRefresh = onRefresh,
+                modifier = modifier.fillMaxSize()
+            )
+        }
     }
 }
 
