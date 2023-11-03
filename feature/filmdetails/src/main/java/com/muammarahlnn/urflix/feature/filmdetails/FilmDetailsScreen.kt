@@ -1,7 +1,8 @@
 package com.muammarahlnn.urflix.feature.filmdetails
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -37,14 +38,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
 import com.muammarahlnn.urflix.core.designsystem.theme.BlackTrans60
 import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
+import com.muammarahlnn.urflix.core.model.data.FilmDetailsModel
+import com.muammarahlnn.urflix.core.model.data.GenreModel
+import com.muammarahlnn.urflix.core.model.data.ImageModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 /**
@@ -53,33 +63,58 @@ import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
  */
 @Composable
 internal fun FilmDetailsRoute(
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: FilmDetailsViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.filmDetailsUiState.collectAsStateWithLifecycle()
     FilmDetailsScreen(
+        uiState = uiState,
+        onBackClick = onBackClick,
         modifier = modifier,
     )
 }
 
 @Composable
 fun FilmDetailsScreen(
+    uiState: FilmDetailsUiState,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize()
-    ) {
-        item {
-            FilmDetailsHeaderInfo(
-                modifier = Modifier.padding(bottom = 16.dp)
+    when (uiState) {
+        FilmDetailsUiState.Loading -> {
+            CircularLoading(
+                modifier = modifier.fillMaxSize()
             )
         }
-        item {
-            FilmDetailsSynopsis()
+
+        is FilmDetailsUiState.Success -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize()
+            ) {
+                item {
+                    FilmDetailsHeaderInfo(
+                        filmDetails = uiState.filmDetails,
+                        onBackClick = onBackClick,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+                item {
+                    FilmDetailsSynopsis(
+                        uiState.filmDetails.overview
+                    )
+                }
+            }
         }
+
+        is FilmDetailsUiState.Error -> TODO()
     }
 }
 
 @Composable
 private fun FilmDetailsHeaderInfo(
+    filmDetails: FilmDetailsModel,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -87,10 +122,14 @@ private fun FilmDetailsHeaderInfo(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        FilmDetailsCarousel()
-        Image(
-            painter = painterResource(id = R.drawable.default_avatar),
+        FilmDetailsCarousel(
+            backdrops = filmDetails.backdrops,
+            onBackClick = onBackClick
+        )
+        AsyncImage(
+            model = filmDetails.posterImage,
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .padding(
                     top = backdropImageCarouselHeight - (backdropImageCarouselHeight / 5),
@@ -100,9 +139,13 @@ private fun FilmDetailsHeaderInfo(
                 .width(posterImageWidth)
                 .height(posterImageHeight)
                 .align(Alignment.TopStart)
-                .background(MaterialTheme.colorScheme.primary)
         )
         FilmDetailsDataContent(
+            title = filmDetails.title,
+            releaseDate = filmDetails.releaseDate,
+            duration = filmDetails.duration,
+            voteAverage = filmDetails.voteAverage,
+            genres = filmDetails.genres,
             modifier = Modifier
                 .padding(
                     top = backdropImageCarouselHeight + 16.dp,
@@ -115,10 +158,11 @@ private fun FilmDetailsHeaderInfo(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FilmDetailsCarousel(
+    backdrops: List<ImageModel>,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val images = listOf(1, 2, 3)
-    val pagerState = rememberPagerState { images.size }
+    val pagerState = rememberPagerState { backdrops.size }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,8 +172,8 @@ private fun FilmDetailsCarousel(
             state = pagerState,
             modifier = modifier.fillMaxSize()
         ) { index ->
-            Image(
-                painter = painterResource(id = R.drawable.default_avatar),
+            AsyncImage(
+                model = backdrops[index].fileImage,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -137,7 +181,7 @@ private fun FilmDetailsCarousel(
         }
 
         CarouselIndexIndicator(
-            totalIndex = images.size,
+            totalIndex = backdrops.size,
             selectedIndex = pagerState.currentPage,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -152,7 +196,7 @@ private fun FilmDetailsCarousel(
             .size(24.dp)
 
         IconButton(
-            onClick = {},
+            onClick = onBackClick,
             modifier = headerIconModifier.then(
                 Modifier.align(Alignment.TopStart)
             )
@@ -218,15 +262,22 @@ private fun CarouselIndexIndicator(
 
 @Composable
 private fun FilmDetailsDataContent(
+    title: String,
+    releaseDate: String,
+    duration: Int,
+    voteAverage: Float,
+    genres: List<GenreModel>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Haunting In Venice",
+            text = title,
             style = MaterialTheme.typography.titleSmall.copy(
                 fontSize = 16.sp
             ),
             color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
@@ -235,7 +286,7 @@ private fun FilmDetailsDataContent(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             Text(
-                text = "Sep 2023",
+                text = formatDate(releaseDate),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -251,7 +302,7 @@ private fun FilmDetailsDataContent(
             Spacer(modifier = Modifier.width(4.dp))
 
             Text(
-                text = "104 mins",
+                text = "$duration mins",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -270,20 +321,21 @@ private fun FilmDetailsDataContent(
 
             Spacer(modifier = Modifier.width(4.dp))
 
+            val formattedVoteAverage = String.format("%.1f", voteAverage)
             Text(
-                text = "8.8",
+                text = formattedVoteAverage,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
 
-        val genres = listOf("Mystery", "Thriller", "Crime")
         LazyRow(
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
                 items = genres,
+                key = { it.id }
             ) {
                 GenreItem(it)
             }
@@ -292,11 +344,9 @@ private fun FilmDetailsDataContent(
 }
 
 @Composable
-private fun GenreItem(
-    genre: String,
-) {
+private fun GenreItem(genre: GenreModel) {
     Text(
-        text = genre,
+        text = genre.name,
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
@@ -315,36 +365,44 @@ private fun GenreItem(
 
 @Composable
 private fun FilmDetailsSynopsis(
+    synopsis: String,
     modifier: Modifier = Modifier,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     Column(
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier
+            .animateContentSize()
+            .noRippleClickable {
+                isExpanded = !isExpanded
+            }
+            .padding(horizontal = 16.dp)
     ) {
         Text(
             text = stringResource(id = R.string.synopsis),
             style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        Text(
-            text = "Lorem ipsum dolor sit amet lorem ipsum dolor sit amet Lorem ipsum dolor sit amet lorem ipsum dolor sit amet Lorem ipsum dolor sit amet lorem ipsum dolor sit amet Lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onBackground,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = if (isExpanded) Int.MAX_VALUE else 3,
-        )
+        AnimatedContent(
+            targetState = isExpanded,
+            label = "Synopsis AnimatedContent",
+        ) { targetState ->
+            Text(
+                text = synopsis,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = if (targetState) Int.MAX_VALUE else 3,
+            )
+        }
         Text(
             text = stringResource(
                 id = if (!isExpanded) R.string.read_more else R.string.read_less
             ),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.noRippleClickable {
-                isExpanded = !isExpanded
-            }
         )
     }
 }
@@ -352,3 +410,10 @@ private fun FilmDetailsSynopsis(
 private val backdropImageCarouselHeight = 200.dp
 private val posterImageHeight = 175.dp
 private val posterImageWidth = 125.dp
+
+private fun formatDate(inputDate: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    val outputFormat = SimpleDateFormat("MMM yyyy", Locale.US)
+    val date: Date = inputFormat.parse(inputDate) as Date
+    return outputFormat.format(date)
+}

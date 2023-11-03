@@ -48,7 +48,7 @@ import com.muammarahlnn.urflix.feature.home.R
  */
 @Composable
 internal fun HomeRoute(
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -109,7 +109,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     moviesSectionsUiData: List<MoviesSectionUiData>,
     tvShowsSectionsUiData: List<TvShowsSectionUiData>,
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -162,7 +162,7 @@ private fun HomeScreen(
 @Composable
 private fun FilmsSectionHorizontalList(
     uiState: FilmsSectionUiState,
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -236,14 +236,17 @@ private fun FilmsSectionHeader(
 @Composable
 private fun FilmItemCard(
     film: FilmModel,
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .width(120.dp)
             .height(filmItemHeight)
             .clickable {
-                onFilmClick()
+                onFilmClick(
+                    film.id,
+                    film.filmType.ordinal
+                )
             }
     ) {
         Card(

@@ -1,7 +1,9 @@
 package com.muammarahlnn.urflix.core.data.di
 
+import com.muammarahlnn.urflix.core.data.repository.FilmDetailsRepository
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.data.repository.ProfileRepository
+import com.muammarahlnn.urflix.core.data.repository.impl.FilmDetailsRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.HomeRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.ProfileRepositoryImpl
 import dagger.Binds
@@ -27,4 +29,9 @@ interface DataModule {
     fun bindsProfileRepository(
         profileRepository: ProfileRepositoryImpl
     ): ProfileRepository
+
+    @Binds
+    fun bindsFilmDetailsRepository(
+        filmDetailsRepository: FilmDetailsRepositoryImpl
+    ): FilmDetailsRepository
 }

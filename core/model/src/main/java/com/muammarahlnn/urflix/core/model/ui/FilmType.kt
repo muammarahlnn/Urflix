@@ -7,5 +7,15 @@ package com.muammarahlnn.urflix.core.model.ui
  */
 enum class FilmType(val value: String) {
     MOVIES("MOVIES"),
-    TV_SHOWS("TV SHOWS")
+    TV_SHOWS("TV SHOWS");
+
+    companion object {
+
+        fun getFilmType(filmTypeOrdinal: Int): FilmType =
+            when (filmTypeOrdinal) {
+                MOVIES.ordinal -> MOVIES
+                TV_SHOWS.ordinal -> TV_SHOWS
+                else -> throw IllegalStateException("FilmType not found.")
+            }
+    }
 }
