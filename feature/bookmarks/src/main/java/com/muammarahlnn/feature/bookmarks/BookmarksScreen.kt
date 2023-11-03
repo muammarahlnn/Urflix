@@ -1,6 +1,7 @@
 package com.muammarahlnn.feature.bookmarks
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import com.muammarahlnn.urflix.feature.bookmarks.R
  */
 @Composable
 internal fun BookmarksRoute(
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BookmarksViewModel = hiltViewModel(),
 ) {
@@ -52,6 +54,7 @@ internal fun BookmarksRoute(
     BookmarksScreen(
         uiState = uiState,
         onRefresh = viewModel::loadBookmarkedFilms,
+        onFilmClick = onFilmClick,
         modifier = modifier,
     )
 }
@@ -60,6 +63,7 @@ internal fun BookmarksRoute(
 private fun BookmarksScreen(
     uiState: BookmarksUiState,
     onRefresh: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -78,7 +82,10 @@ private fun BookmarksScreen(
                 items(
                     items = uiState.films,
                 ) { film ->
-                    BookmarkedFilmCard(film)
+                    BookmarkedFilmCard(
+                        film = film,
+                        onFilmClick =  onFilmClick,
+                    )
                 }
             }
         }
@@ -103,6 +110,7 @@ private fun BookmarksScreen(
 @Composable
 private fun BookmarkedFilmCard(
     film: FilmModel,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -111,6 +119,12 @@ private fun BookmarkedFilmCard(
             .fillMaxWidth()
             .height(80.dp)
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable {
+                onFilmClick(
+                    film.id,
+                    film.filmType.ordinal,
+                )
+            }
     ) {
         AsyncImage(
             model = film.posterImage,

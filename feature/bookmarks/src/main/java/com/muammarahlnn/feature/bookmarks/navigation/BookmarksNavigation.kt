@@ -17,8 +17,12 @@ fun NavController.navigateToBookmarks(navOptions: NavOptions? = null) {
     this.navigate(BOOKMARKS_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.bookmarksScreen() {
+fun NavGraphBuilder.bookmarksScreen(
+    onFilmClick: (Int, Int) -> Unit,
+) {
     composable(route = BOOKMARKS_ROUTE) {
-        BookmarksRoute()
+        BookmarksRoute(
+            onFilmClick = onFilmClick,
+        )
     }
 }
