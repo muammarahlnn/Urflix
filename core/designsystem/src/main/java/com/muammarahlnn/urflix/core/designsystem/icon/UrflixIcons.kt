@@ -15,10 +15,12 @@ import androidx.compose.material.icons.rounded.FlashOff
 import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Tv
 
 
 /**
@@ -62,4 +64,8 @@ object UrflixIcons {
     val ArrowBack = Icons.Rounded.ArrowBack
 
     val Bookmark = Icons.Rounded.Bookmark
+
+    val Movie = Icons.Rounded.Movie
+
+    val Tv = Icons.Rounded.Tv
 }
