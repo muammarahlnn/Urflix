@@ -16,4 +16,10 @@ interface ProfileRepository {
     )
 
     fun getUser(): Flow<UserModel>
+
+    suspend fun savePhotoProfileUser(
+        photoProfileUriString: String,
+    )
+
+    fun getPhotoProfile(): Flow<String>
 }

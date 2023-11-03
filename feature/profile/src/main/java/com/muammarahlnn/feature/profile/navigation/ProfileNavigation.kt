@@ -17,8 +17,12 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
     this.navigate(PROFILE_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.profileScreen() {
+fun NavGraphBuilder.profileScreen(
+    onCameraActionClick: () -> Unit,
+) {
     composable(route = PROFILE_ROUTE) {
-        ProfileRoute()
+        ProfileRoute(
+            onCameraActionClick = onCameraActionClick,
+        )
     }
 }

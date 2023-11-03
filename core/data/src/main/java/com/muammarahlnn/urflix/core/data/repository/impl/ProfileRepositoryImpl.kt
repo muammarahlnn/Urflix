@@ -30,4 +30,10 @@ class ProfileRepositoryImpl @Inject constructor(
         urflixPreferences.getUser().map {
             it.toUserModel()
         }
+
+    override suspend fun savePhotoProfileUser(photoProfileUriString: String) =
+        urflixPreferences.savePhotoProfile(photoProfileUriString)
+
+    override fun getPhotoProfile(): Flow<String> =
+        urflixPreferences.getPhotoProfile()
 }

@@ -28,6 +28,8 @@ class UrflixPreferencesDataStore @Inject constructor(
         val FULL_NAME = stringPreferencesKey("full_name")
 
         val EMAIL = stringPreferencesKey("email")
+
+        val PHOTO_PROFILE = stringPreferencesKey("photo_profile")
     }
 
     suspend fun saveUser(user: UserEntity) {
@@ -42,5 +44,15 @@ class UrflixPreferencesDataStore @Inject constructor(
             fullName = pref[PreferencesKeys.FULL_NAME] ?: "",
             email = pref[PreferencesKeys.EMAIL] ?: "",
         )
+    }
+
+    suspend fun savePhotoProfile(photoProfile: String) {
+        preferences.edit { pref ->
+            pref[PreferencesKeys.PHOTO_PROFILE] = photoProfile
+        }
+    }
+
+    fun getPhotoProfile(): Flow<String> = preferences.data.map { pref ->
+        pref[PreferencesKeys.PHOTO_PROFILE] ?: ""
     }
 }

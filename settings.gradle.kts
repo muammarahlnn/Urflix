@@ -16,15 +16,19 @@ dependencyResolutionManagement {
 
 rootProject.name = "Urflix"
 include(":app")
+
 include(":core:designsystem")
+include(":core:network")
+include(":core:model")
+include(":core:data")
+include(":core:common")
+include(":core:datastore")
+
 include(":feature")
 include(":feature:homenavigator")
 include(":feature:home")
 include(":feature:profile")
 include(":feature:search")
 include(":feature:bookmarks")
-include(":core:network")
-include(":core:model")
-include(":core:data")
-include(":core:common")
-include(":core:datastore")
+include(":feature:camera")
+

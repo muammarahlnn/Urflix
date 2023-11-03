@@ -11,4 +11,6 @@
     <string name="cancel">Cancel</string>
     <string name="guest_full_name">Guest</string>
     <string name="guest_email">No email yet</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

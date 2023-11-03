@@ -1,5 +1,6 @@
 package com.muammarahlnn.feature.profile
 
+import android.net.Uri
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -25,16 +26,19 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,7 +53,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
+import com.muammarahlnn.urflix.core.designsystem.util.getFilePhoto
+import com.muammarahlnn.urflix.core.designsystem.util.isPhotoExists
 import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
 import com.muammarahlnn.urflix.feature.profile.R
 
@@ -60,14 +67,30 @@ import com.muammarahlnn.urflix.feature.profile.R
  */
 @Composable
 internal fun ProfileRoute(
+    onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
+    var photoProfileUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    photoProfileUri = viewModel.photoProfileUri
+
+    // from camera
+    LaunchedEffect(isPhotoExists(context)) {
+        if (isPhotoExists(context)) {
+            val photoProfileUriFromCamera = Uri.fromFile(getFilePhoto(context))
+            viewModel.savePhotoProfileUser(photoProfileUriFromCamera)
+            photoProfileUri = photoProfileUriFromCamera
+        }
+    }
+
     var showEditProfileDataDialog by rememberSaveable { mutableStateOf(false) }
+    var showChangePhotoProfileBottomSheet by rememberSaveable { mutableStateOf(false) }
     ProfileScreen(
         showEditProfileDataDialog = showEditProfileDataDialog,
+        showChangePhotoProfileBottomSheet = showChangePhotoProfileBottomSheet,
+        photoProfileUri = photoProfileUri,
         fullName = viewModel.fullName,
         email = viewModel.email,
         onEditDataClick = {
@@ -75,6 +98,9 @@ internal fun ProfileRoute(
         },
         onFullNameChange = viewModel::setFullNameValue,
         onEmailChange = viewModel::setEmailValue,
+        onChangePhotoProfileButtonClick = {
+            showChangePhotoProfileBottomSheet = true
+        },
         onChangeChangeProfileDataDialog = {
             viewModel.saveUser()
             showEditProfileDataDialog = false
@@ -87,6 +113,21 @@ internal fun ProfileRoute(
         onDismissChangeProfileDataDialog = {
             showEditProfileDataDialog = false
         },
+        onCameraActionClick = {
+            onCameraActionClick()
+            showChangePhotoProfileBottomSheet = false
+        },
+        onGalleryActionClick = {
+            Toast.makeText(
+                context,
+                "Gallery action is under development",
+                Toast.LENGTH_SHORT
+            ).show()
+            showChangePhotoProfileBottomSheet = false
+        },
+        onDismissChangePhotoProfileBottomSheet = {
+            showChangePhotoProfileBottomSheet = false
+        },
         modifier = modifier,
     )
 }
@@ -94,13 +135,19 @@ internal fun ProfileRoute(
 @Composable
 private fun ProfileScreen(
     showEditProfileDataDialog: Boolean,
+    showChangePhotoProfileBottomSheet: Boolean,
+    photoProfileUri: Uri?,
     fullName: String,
     email: String,
     onEditDataClick: () -> Unit,
     onFullNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
+    onChangePhotoProfileButtonClick: () -> Unit,
     onChangeChangeProfileDataDialog: () -> Unit,
     onDismissChangeProfileDataDialog: () -> Unit,
+    onCameraActionClick: () -> Unit,
+    onGalleryActionClick: () -> Unit,
+    onDismissChangePhotoProfileBottomSheet: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (showEditProfileDataDialog) {
@@ -113,6 +160,15 @@ private fun ProfileScreen(
             onDismiss = onDismissChangeProfileDataDialog,
         )
     }
+
+    if (showChangePhotoProfileBottomSheet) {
+        ChangePhotoProfileBottomSheet(
+            onCameraActionClick = onCameraActionClick,
+            onGalleryActionClick = onGalleryActionClick,
+            onDismiss = onDismissChangePhotoProfileBottomSheet
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -120,18 +176,22 @@ private fun ProfileScreen(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         ProfileData(
+            photoProfileUri = photoProfileUri,
             fullName = fullName,
             email = email,
             onEditDataClick = onEditDataClick,
+            onChangePhotoProfileButtonClick = onChangePhotoProfileButtonClick,
         )
     }
 }
 
 @Composable
 private fun ProfileData(
+    photoProfileUri: Uri?,
     fullName: String,
     email: String,
     onEditDataClick: () -> Unit,
+    onChangePhotoProfileButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -146,6 +206,8 @@ private fun ProfileData(
             modifier = Modifier.padding(top = photoProfileSize / 2)
         )
         PhotoProfile(
+            photoProfileUri = photoProfileUri,
+            onChangePhotoProfileButtonClick = onChangePhotoProfileButtonClick,
             modifier = Modifier.align(Alignment.TopCenter)
         )
     }
@@ -239,29 +301,42 @@ private fun ProfileDetailInfoCard(
 
 @Composable
 private fun PhotoProfile(
+    photoProfileUri: Uri?,
+    onChangePhotoProfileButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        Image(
-            painter = painterResource(id = R.drawable.default_avatar),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .size(photoProfileSize)
-                .clip(CircleShape)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.background,
-                    shape = CircleShape
-                )
-        )
+        val photoProfileModifier = Modifier
+            .size(photoProfileSize)
+            .clip(CircleShape)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.background,
+                shape = CircleShape
+            )
+
+        if (photoProfileUri == null) {
+            Image(
+                painter = painterResource(id = R.drawable.default_avatar),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = photoProfileModifier
+            )
+        } else {
+            AsyncImage(
+                model = photoProfileUri,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = photoProfileModifier
+            )
+        }
 
         FilledIconButton(
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.onBackground,
             ),
-            onClick = {},
+            onClick = onChangePhotoProfileButtonClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .size(32.dp)
@@ -438,6 +513,73 @@ private fun EditableOutlinedTextField(
                 focusedTextColor = MaterialTheme.colorScheme.onBackground
             ),
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChangePhotoProfileBottomSheet(
+    onCameraActionClick: () -> Unit,
+    onGalleryActionClick: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                )
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(0.5f)
+                    .noRippleClickable {
+                        onCameraActionClick()
+                    },
+            ) {
+                Icon(
+                    imageVector = UrflixIcons.Camera,
+                    contentDescription = stringResource(id = R.string.camera),
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(id = R.string.camera),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(0.5f)
+                    .noRippleClickable {
+                        onGalleryActionClick()
+                    },
+            ) {
+                Icon(
+                    imageVector = UrflixIcons.Gallery,
+                    contentDescription = stringResource(id = R.string.gallery),
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(id = R.string.gallery),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
     }
 }
 

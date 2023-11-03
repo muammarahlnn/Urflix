@@ -7,11 +7,15 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Bookmarks
+import androidx.compose.material.icons.rounded.Cameraswitch
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.FlashOff
+import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PhotoCamera
+import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Search
 
 
@@ -44,4 +48,12 @@ object UrflixIcons {
     val Edit = Icons.Rounded.Edit
 
     val Camera = Icons.Rounded.PhotoCamera
+
+    val Gallery = Icons.Rounded.PhotoLibrary
+
+    val SwitchCamera = Icons.Rounded.Cameraswitch
+
+    val FlashOn = Icons.Rounded.FlashOn
+
+    val FlashOff = Icons.Rounded.FlashOff
 }

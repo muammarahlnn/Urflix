@@ -1,5 +1,6 @@
 package com.muammarahlnn.feature.profile
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,6 +21,11 @@ class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
 ) : ViewModel() {
 
+//    private var _photoProfileUri = MutableStateFlow<Uri?>(null)
+
+    var photoProfileUri by mutableStateOf<Uri?>(null)
+        private set
+
     var fullName by mutableStateOf("")
         private set
 
@@ -36,6 +42,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getUser()
+        getPhotoProfile()
     }
 
     private fun getUser() {
@@ -47,12 +54,27 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    private fun getPhotoProfile() {
+        viewModelScope.launch {
+            profileRepository.getPhotoProfile().collect { photoProfile ->
+                if (photoProfile.isNotEmpty()) {
+                    photoProfileUri = Uri.parse(photoProfile)
+                }
+            }
+        }
+    }
+
     fun saveUser() {
-        val saveUserJob = viewModelScope.launch {
+        viewModelScope.launch {
             profileRepository.saveUser(fullName, email)
         }
-        if (saveUserJob.isCompleted) {
-            getUser()
+        getUser()
+    }
+
+    fun savePhotoProfileUser(photoProfileUri: Uri) {
+        viewModelScope.launch {
+            profileRepository.savePhotoProfileUser(photoProfileUri.toString())
         }
+        getPhotoProfile()
     }
 }
