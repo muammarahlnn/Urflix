@@ -18,7 +18,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.homeScreen(
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
 ) {
     composable(route = HOME_ROUTE) {
         HomeRoute(

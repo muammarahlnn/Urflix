@@ -29,7 +29,7 @@ import com.muammarahlnn.urflix.core.designsystem.component.UrflixNavigationBarIt
  */
 @Composable
 internal fun HomeNavigatorRoute(
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,7 +42,7 @@ internal fun HomeNavigatorRoute(
 
 @Composable
 private fun HomeNavigator(
-    onFilmClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     state: HomeNavigatorState = rememberHomeNavigatorState(),

@@ -1,6 +1,8 @@
 package com.muammarahlnn.urflix.core.network.di
 
+import com.muammarahlnn.urflix.core.network.datasource.FilmDetailsNetworkDataSource
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
+import com.muammarahlnn.urflix.core.network.datasource.impl.FilmDetailsNetworkDataSourceImpl
 import com.muammarahlnn.urflix.core.network.datasource.impl.HomeNetworkDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -20,4 +22,9 @@ interface NetworkDataSourceModule {
     fun bindsHomeNetworkDataSource(
         homeNetworkDataSource: HomeNetworkDataSourceImpl
     ): HomeNetworkDataSource
+
+    @Binds
+    fun bindsFilmDetailsNetworkDataSource(
+        filmDetailsNetworkDataSource: FilmDetailsNetworkDataSourceImpl
+    ): FilmDetailsNetworkDataSource
 }

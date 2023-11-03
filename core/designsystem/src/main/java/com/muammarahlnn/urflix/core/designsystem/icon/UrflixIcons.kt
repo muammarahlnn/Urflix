@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Tv
 
 
@@ -68,4 +69,6 @@ object UrflixIcons {
     val Movie = Icons.Rounded.Movie
 
     val Tv = Icons.Rounded.Tv
+
+    val Star = Icons.Rounded.Star
 }

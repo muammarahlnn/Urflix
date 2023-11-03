@@ -23,8 +23,8 @@ fun MovieResponse.toFilmModel() = FilmModel(
     title = title.orEmpty(),
     releaseDate = releaseDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
-    posterImage = posterPath?.toOverviewImage().orEmpty(),
-    backdropImage = backdropPath?.toOverviewImage().orEmpty(),
+    posterImage = posterPath?.toPosterImage().orEmpty(),
+    backdropImage = backdropPath?.toPosterImage().orEmpty(),
     genreIds = genreIds ?: listOf(),
     filmType = FilmType.MOVIES,
 )
@@ -40,13 +40,12 @@ fun TvShowResponse.toFilmModel() = FilmModel(
     title = name.orEmpty(),
     releaseDate = firstAirDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
-    posterImage = posterPath?.toOverviewImage().orEmpty(),
-    backdropImage = backdropPath?.toOverviewImage().orEmpty(),
+    posterImage = posterPath?.toPosterImage().orEmpty(),
+    backdropImage = backdropPath?.toPosterImage().orEmpty(),
     genreIds = genreIds ?: listOf(),
     filmType = FilmType.TV_SHOWS,
 )
 
-fun String.toOverviewImage() =
-    "$IMG_URL/w342$this"
+fun String.toPosterImage() = "$IMG_URL/w342$this"
 
 internal const val IMG_URL = BuildConfig.IMG_URL
