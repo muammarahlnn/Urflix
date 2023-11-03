@@ -1,10 +1,11 @@
 plugins {
     id("urflix.android.library")
     id("urflix.android.hilt")
+    id("urflix.android.room")
 }
 
 android {
-    namespace = "com.muammarahlnn.urflix.core.data"
+    namespace = "com.muammarahlnn.urflix.core.database"
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -14,11 +15,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:network"))
-    implementation(project(":core:model"))
-    implementation(project(":core:datastore"))
-    implementation(project(":core:database"))
-
-    implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
 }

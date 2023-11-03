@@ -1,5 +1,7 @@
 package com.muammarahlnn.urflix.core.model.data
 
+import com.muammarahlnn.urflix.core.model.ui.FilmType
+
 
 /**
  * @author Muammar Ahlan Abimanyu (muammarahlnn)
@@ -15,6 +17,7 @@ data class FilmDetailsModel(
     val posterImage: String,
     val backdrops: List<ImageModel>,
     val genres: List<GenreModel>,
+    val filmType: FilmType,
 )
 
 data class ImageModel(

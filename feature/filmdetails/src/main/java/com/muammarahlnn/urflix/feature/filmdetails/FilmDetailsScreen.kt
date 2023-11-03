@@ -1,5 +1,6 @@
 package com.muammarahlnn.urflix.feature.filmdetails
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -68,11 +70,26 @@ internal fun FilmDetailsRoute(
     modifier: Modifier = Modifier,
     viewModel: FilmDetailsViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     val uiState by viewModel.filmDetailsUiState.collectAsStateWithLifecycle()
+    val isFilmBookmarked by viewModel.isFilmBookmarked.collectAsStateWithLifecycle()
     FilmDetailsScreen(
         uiState = uiState,
+        isFilmBookmarked = isFilmBookmarked,
         onBackClick = onBackClick,
-        onRefresh = viewModel::fetchFilmDetailsData,
+        onRefresh = viewModel::refreshFilmDetailsScreen,
+        onBookmarkClick = { filmDetails ->
+            val message: String
+            if (isFilmBookmarked) {
+                viewModel.deleteBookmarkedFilm()
+                message = "${filmDetails.title} is successfully removed from Bookmarks"
+            } else {
+                viewModel.insertBookmarkedFilm(filmDetails)
+                message = "${filmDetails.title} is successfully saved to Bookmarks"
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        },
         modifier = modifier,
     )
 }
@@ -80,8 +97,10 @@ internal fun FilmDetailsRoute(
 @Composable
 fun FilmDetailsScreen(
     uiState: FilmDetailsUiState,
+    isFilmBookmarked: Boolean,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
+    onBookmarkClick: (FilmDetailsModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -98,7 +117,9 @@ fun FilmDetailsScreen(
                 item {
                     FilmDetailsHeaderInfo(
                         filmDetails = uiState.filmDetails,
+                        isFilmBookmarked = isFilmBookmarked,
                         onBackClick = onBackClick,
+                        onBookmarkClick = onBookmarkClick,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
@@ -123,7 +144,9 @@ fun FilmDetailsScreen(
 @Composable
 private fun FilmDetailsHeaderInfo(
     filmDetails: FilmDetailsModel,
+    isFilmBookmarked: Boolean,
     onBackClick: () -> Unit,
+    onBookmarkClick: (FilmDetailsModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -132,8 +155,12 @@ private fun FilmDetailsHeaderInfo(
             .wrapContentHeight()
     ) {
         FilmDetailsCarousel(
+            isFilmBookmarked = isFilmBookmarked,
             backdrops = filmDetails.backdrops,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onBookmarkClick = {
+                onBookmarkClick(filmDetails)
+            },
         )
         AsyncImage(
             model = filmDetails.posterImage,
@@ -167,8 +194,10 @@ private fun FilmDetailsHeaderInfo(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FilmDetailsCarousel(
+    isFilmBookmarked: Boolean,
     backdrops: List<ImageModel>,
     onBackClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState { backdrops.size }
@@ -219,13 +248,15 @@ private fun FilmDetailsCarousel(
         }
 
         IconButton(
-            onClick = {},
+            onClick = onBookmarkClick,
             modifier = headerIconModifier.then(
                 Modifier.align(Alignment.TopEnd)
             )
         ) {
             Icon(
-                imageVector = UrflixIcons.Bookmark,
+                imageVector =
+                    if (isFilmBookmarked) UrflixIcons.Bookmark
+                    else UrflixIcons.BookmarkBorder,
                 contentDescription = stringResource(id = R.string.bookmark_icon_desc),
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.size(20.dp)

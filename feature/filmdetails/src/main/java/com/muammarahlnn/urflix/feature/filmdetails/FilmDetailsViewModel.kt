@@ -41,11 +41,20 @@ class FilmDetailsViewModel @Inject constructor(
 
     val filmDetailsUiState = _filmDetailsUiState.asStateFlow()
 
+    private val _isFilmBookmarked = MutableStateFlow(false)
+
+    val isFilmBookmarked = _isFilmBookmarked.asStateFlow()
+
     init {
-        fetchFilmDetailsData()
+        refreshFilmDetailsScreen()
     }
 
-    fun fetchFilmDetailsData() {
+    fun refreshFilmDetailsScreen() {
+        fetchFilmDetailsData()
+        loadIsFilmBookmarked()
+    }
+
+    private fun fetchFilmDetailsData() {
         when (filmType) {
             FilmType.MOVIES -> fetchMovieDetailsData()
             FilmType.TV_SHOWS -> fetchTvShowDetailsData()
@@ -69,6 +78,28 @@ class FilmDetailsViewModel @Inject constructor(
                 .collect { result ->
                     handleFetchFilmDetails(result, _filmDetailsUiState)
                 }
+        }
+    }
+
+    private fun loadIsFilmBookmarked() {
+        viewModelScope.launch {
+            filmDetailsRepository.isFilmBookmarked(filmId).collect { bookmarked ->
+                _isFilmBookmarked.update {
+                    bookmarked
+                }
+            }
+        }
+    }
+
+    fun insertBookmarkedFilm(filmDetails: FilmDetailsModel) {
+        viewModelScope.launch {
+            filmDetailsRepository.insertBookmarkedFilm(filmDetails)
+        }
+    }
+
+    fun deleteBookmarkedFilm() {
+        viewModelScope.launch {
+            filmDetailsRepository.deleteBookmarkedFilm(filmId)
         }
     }
 
