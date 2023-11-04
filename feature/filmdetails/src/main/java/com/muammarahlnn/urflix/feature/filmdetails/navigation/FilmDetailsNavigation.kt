@@ -36,13 +36,12 @@ fun NavController.navigateToFilmDetails(
     filmId: Int,
     filmTypeOrdinal: Int,
 ) {
-    this.navigate("$FILM_DETAILS_ROUTE/$filmId/$filmTypeOrdinal") {
-        launchSingleTop = true
-    }
+    this.navigate("$FILM_DETAILS_ROUTE/$filmId/$filmTypeOrdinal")
 }
 
 fun NavGraphBuilder.filmsDetailsScreen(
     onBackClick: () -> Unit,
+    onGenreItemClick: (Int, String, Int) -> Unit,
 ) {
     composable(
         route = FILM_DETAILS_ROUTE_WITH_ARGS,
@@ -57,6 +56,7 @@ fun NavGraphBuilder.filmsDetailsScreen(
     ) {
         FilmDetailsRoute(
             onBackClick = onBackClick,
+            onGenreItemClick = onGenreItemClick,
         )
     }
 }
