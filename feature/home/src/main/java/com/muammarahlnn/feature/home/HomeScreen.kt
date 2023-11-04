@@ -38,10 +38,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
 import com.muammarahlnn.urflix.core.designsystem.component.ErrorHomeSection
 import com.muammarahlnn.urflix.core.designsystem.component.FilmItemCard
 import com.muammarahlnn.urflix.core.designsystem.component.WrappedTabRow
+import com.muammarahlnn.urflix.core.designsystem.component.shimmerBrush
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
 import com.muammarahlnn.urflix.core.model.data.GenreModel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
@@ -242,11 +242,7 @@ private fun FilmsSectionHorizontalList(
 ) {
     when (uiState) {
         FilmsSectionUiState.Loading -> {
-            CircularLoading(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(filmItemHeight)
-            )
+            FilmsSectionShimmerLoading()
         }
 
         is FilmsSectionUiState.Success -> {
@@ -324,6 +320,31 @@ private fun FilmsSectionHeader(
 }
 
 @Composable
+private fun FilmsSectionShimmerLoading() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 40.dp
+            )
+    ) {
+        repeat(3) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .width(filmItemWidth)
+                    .height(160.dp)
+                    .background(shimmerBrush())
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+    }
+}
+
+@Composable
 private fun GenresSectionContent(
     uiState: GenresSectionUiState,
     onSeeAllGenresClick: (Int) -> Unit,
@@ -366,9 +387,7 @@ private fun GenresSectionContent(
 
         when (uiState) {
             GenresSectionUiState.Loading -> {
-                CircularLoading(
-                    modifier = Modifier.fillMaxWidth()
-                )
+                GenresSectionShimmerLoading()
             }
 
             is GenresSectionUiState.Success -> {
@@ -442,6 +461,31 @@ private fun GenreText(
             }
             .padding(horizontal = 16.dp, vertical = 8.dp)
     )
+}
+
+@Composable
+private fun GenresSectionShimmerLoading() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 32.dp
+            )
+    ) {
+        repeat(6) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .width(64.dp)
+                    .height(32.dp)
+                    .background(shimmerBrush())
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+        }
+    }
 }
 
 private val filmItemHeight = 200.dp
