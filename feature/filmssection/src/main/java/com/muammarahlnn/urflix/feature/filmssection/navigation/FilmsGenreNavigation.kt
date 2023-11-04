@@ -47,6 +47,7 @@ fun NavController.navigateToFilmsGenre(
 
 fun NavGraphBuilder.filmsGenreScreen(
     onBackClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
 ) {
     composable(
         route = FILMS_GENRE_ROUTE_WITH_ARGS,
@@ -63,7 +64,8 @@ fun NavGraphBuilder.filmsGenreScreen(
         )
     ) {
         FilmsGenreRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onFilmClick = onFilmClick,
         )
     }
 }
