@@ -50,6 +50,7 @@ import com.muammarahlnn.urflix.core.designsystem.component.UrflixTopAppBarDefaul
 import com.muammarahlnn.urflix.core.designsystem.component.VoteAverageText
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
 import com.muammarahlnn.urflix.core.designsystem.util.formatToYear
+import com.muammarahlnn.urflix.core.designsystem.util.noRippleClickable
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.feature.filmssection.viewmodel.FilmsGenreViewModel
 import com.muammarahlnn.urflix.feature.filmssection.viewmodel.FilmsSectionViewModel
@@ -63,6 +64,7 @@ import com.muammarahlnn.urflix.core.designsystem.R as designSystemR
 @Composable
 internal fun FilmsSectionRoute(
     onBackClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FilmsSectionViewModel = hiltViewModel(),
 ) {
@@ -74,6 +76,7 @@ internal fun FilmsSectionRoute(
         isLoadingNextPage = isLoadingNextPage,
         onBackClick = onBackClick,
         onRefresh = viewModel::refresh,
+        onFilmClick = onFilmClick,
         onScrolledToTheEnd = viewModel::fetchNextPage,
         modifier = modifier,
     )
@@ -81,7 +84,7 @@ internal fun FilmsSectionRoute(
 
 @Composable
 internal fun FilmsGenreRoute(
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit,onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FilmsGenreViewModel = hiltViewModel(),
 ) {
@@ -93,6 +96,7 @@ internal fun FilmsGenreRoute(
         isLoadingNextPage = isLoadingNextPage,
         onBackClick = onBackClick,
         onRefresh = viewModel::refresh,
+        onFilmClick = onFilmClick,
         onScrolledToTheEnd = viewModel::fetchNextPage,
         modifier = modifier,
     )
@@ -106,6 +110,7 @@ private fun FilmsScreen(
     isLoadingNextPage: Boolean,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
     onScrolledToTheEnd: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -144,7 +149,10 @@ private fun FilmsScreen(
                         items = uiState.films,
                         key = { it.id },
                     ) { film ->
-                        FilmSectionItemCard(film)
+                        FilmSectionItemCard(
+                            film = film,
+                            onFilmClick = onFilmClick,
+                        )
                     }
 
                     if (isLoadingNextPage) {
@@ -186,12 +194,16 @@ private fun FilmsScreen(
 @Composable
 private fun FilmSectionItemCard(
     film: FilmModel,
+    onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .noRippleClickable {
+                onFilmClick(film.id, film.filmType.ordinal)
+            }
     ) {
         Card(
             shape = RoundedCornerShape(10.dp),

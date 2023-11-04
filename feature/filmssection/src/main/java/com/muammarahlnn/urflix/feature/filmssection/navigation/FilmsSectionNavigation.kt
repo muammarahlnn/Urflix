@@ -44,6 +44,7 @@ fun NavController.navigateToFilmsSection(
 
 fun NavGraphBuilder.filmsSectionScreen(
     onBackClick: () -> Unit,
+    onFilmClick: (Int, Int) -> Unit,
 ) {
     composable(
         route = FILMS_SECTION_ROUTE_WITH_ARGS,
@@ -57,7 +58,8 @@ fun NavGraphBuilder.filmsSectionScreen(
         )
     ) {
         FilmsSectionRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onFilmClick = onFilmClick,
         )
     }
 }
