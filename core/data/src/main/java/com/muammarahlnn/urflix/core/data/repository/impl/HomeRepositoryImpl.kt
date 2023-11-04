@@ -41,4 +41,9 @@ class HomeRepositoryImpl @Inject constructor(
             it.toGenreModels()
         }
 
+    override fun getTrendingMovies(): Flow<List<FilmModel>> =
+        homeNetworkDataSource.getTrendingMovies().map {
+            it.toFilmModels()
+        }
+
 }

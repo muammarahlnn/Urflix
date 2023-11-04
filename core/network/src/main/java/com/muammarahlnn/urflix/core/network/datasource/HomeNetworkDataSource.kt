@@ -21,4 +21,6 @@ interface HomeNetworkDataSource {
     fun getMovieGenres(): Flow<List<GenreResponse>>
 
     fun getTvShowGenres(): Flow<List<GenreResponse>>
+
+    fun getTrendingMovies(): Flow<List<MovieResponse>>
 }

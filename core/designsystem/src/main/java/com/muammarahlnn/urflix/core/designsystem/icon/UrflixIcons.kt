@@ -18,6 +18,7 @@ import androidx.compose.material.icons.rounded.FlashOff
 import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Movie
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PhotoCamera
@@ -83,4 +84,6 @@ object UrflixIcons {
     val Clear = Icons.Rounded.Clear
 
     val Check = Icons.Rounded.Check
+
+    val Fire = Icons.Rounded.LocalFireDepartment
 }
