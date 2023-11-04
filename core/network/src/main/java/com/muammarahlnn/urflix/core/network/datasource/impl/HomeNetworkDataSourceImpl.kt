@@ -2,9 +2,11 @@ package com.muammarahlnn.urflix.core.network.datasource.impl
 
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
+import com.muammarahlnn.urflix.core.network.api.GenreApi
 import com.muammarahlnn.urflix.core.network.api.MovieApi
 import com.muammarahlnn.urflix.core.network.api.TvShowApi
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
+import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
 import com.muammarahlnn.urflix.core.network.model.response.MovieResponse
 import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +23,7 @@ import javax.inject.Singleton
 class HomeNetworkDataSourceImpl @Inject constructor(
     private val movieApi: MovieApi,
     private val tvShowApi: TvShowApi,
+    private val genreApi: GenreApi,
 ) : HomeNetworkDataSource {
 
     override fun getMovies(section: MoviesSection): Flow<List<MovieResponse>> = flow {
@@ -39,5 +42,13 @@ class HomeNetworkDataSourceImpl @Inject constructor(
             TvShowsSection.POPULAR -> emit(tvShowApi.getPopularTvShows().results)
             TvShowsSection.TOP_RATED -> emit(tvShowApi.getTopRatedTvShows().results)
         }
+    }
+
+    override fun getMovieGenres(): Flow<List<GenreResponse>> = flow {
+        emit(genreApi.getMovieGenres().genres)
+    }
+
+    override fun getTvShowGenres(): Flow<List<GenreResponse>> = flow {
+        emit(genreApi.getTvShowGenres().genres)
     }
 }

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Search</string>
-    <string name="movies">Movies</string>
-    <string name="tv_shows">TV Shows</string>
     <string name="clear_query">Clear search query</string>
     <string name="search_text_field_placeholder">Search movies or tv shows…</string>
     <string name="not_search_yet_text_movie">What movies are you looking for?</string>

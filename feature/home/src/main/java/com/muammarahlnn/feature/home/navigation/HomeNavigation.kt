@@ -18,11 +18,17 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.homeScreen(
+    onSeeAllFilmClick: (Int, Int) -> Unit,
     onFilmClick: (Int, Int) -> Unit,
+    onSeeAllGenresClick: (Int) -> Unit,
+    onGenreItemClick: (Int, String, Int) -> Unit,
 ) {
     composable(route = HOME_ROUTE) {
         HomeRoute(
             onFilmClick = onFilmClick,
+            onSeeAllFilmClick = onSeeAllFilmClick,
+            onSeeAllGenresClick = onSeeAllGenresClick,
+            onGenreItemClick = onGenreItemClick,
         )
     }
 }

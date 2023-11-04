@@ -15,6 +15,7 @@ import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -61,11 +62,15 @@ class HomeViewModel @Inject constructor(
 
     val topRatedTvShowsUiState = _topRatedTvShowsUiState.asStateFlow()
 
+    private val _genresUiState = MutableStateFlow<GenresSectionUiState>(GenresSectionUiState.Loading)
+
+    val genresUiState = _genresUiState.asStateFlow()
+
     init {
-        fetchAllFilms()
+        fetchHomeScreenData()
     }
 
-    private fun fetchAllFilms() {
+    private fun fetchHomeScreenData() {
         fetchNowPlayingMovies()
         fetchUpcomingMovies()
         fetchPopularMovies()
@@ -75,6 +80,8 @@ class HomeViewModel @Inject constructor(
         fetchOnTheAirTvShows()
         fetchPopularTvShows()
         fetchTopRatedTvShows()
+
+        fetchGenres()
     }
 
     private fun fetchNowPlayingMovies() {
@@ -138,6 +145,37 @@ class HomeViewModel @Inject constructor(
             homeRepository.getTvShows(TvShowsSection.TOP_RATED).asResult().collect { result ->
                 handleFetchFilms(result, _topRatedTvShowsUiState)
             }
+        }
+    }
+
+    private fun fetchGenres() {
+        viewModelScope.launch {
+            combine(
+                homeRepository.getMovieGenres(),
+                homeRepository.getTvShowGenres(),
+                ::Pair
+            )
+                .asResult()
+                .collect { result ->
+                    result.onLoading {
+                        _genresUiState.update {
+                            GenresSectionUiState.Loading
+                        }
+                    }.onSuccess {
+                        val (movieGenres,  tvShowGenres) = it
+                        _genresUiState.update {
+                            GenresSectionUiState.Success(
+                                movieGenres = movieGenres,
+                                tvShowGenres = tvShowGenres,
+                            )
+                        }
+                    }.onError { exception, message ->
+                        Log.e("HomeViewModel", exception?.message.toString())
+                        _genresUiState.update {
+                            GenresSectionUiState.Error(message)
+                        }
+                    }
+                }
         }
     }
 

@@ -210,8 +210,8 @@ private fun SearchPager(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val tabs = listOf(
-        stringResource(id = R.string.movies),
-        stringResource(id = R.string.tv_shows),
+        FilmType.MOVIES.displayedText,
+        FilmType.TV_SHOWS.displayedText,
     )
     val pagerState = rememberPagerState { tabs.size }
     Column(modifier = modifier.fillMaxSize()) {

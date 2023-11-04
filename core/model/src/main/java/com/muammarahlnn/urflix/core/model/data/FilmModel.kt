@@ -13,6 +13,6 @@ data class FilmModel(
     val releaseDate: String,
     val voteAverage: Float,
     val posterImage: String,
-    val genreIds: List<Int>,
+    val genreNames: List<String>,
     val filmType: FilmType,
 )

@@ -2,6 +2,8 @@ package com.muammarahlnn.urflix.core.network.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.muammarahlnn.urflix.core.network.BuildConfig
+import com.muammarahlnn.urflix.core.network.api.DiscoverApi
+import com.muammarahlnn.urflix.core.network.api.GenreApi
 import com.muammarahlnn.urflix.core.network.api.MovieApi
 import com.muammarahlnn.urflix.core.network.api.SearchApi
 import com.muammarahlnn.urflix.core.network.api.TvShowApi
@@ -47,6 +49,20 @@ object NetworkModule {
         networkJson: Json,
         client: OkHttpClient,
     ): SearchApi = buildRetrofit(networkJson, client).create(SearchApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesGenreApi(
+        networkJson: Json,
+        client: OkHttpClient,
+    ): GenreApi = buildRetrofit(networkJson, client).create(GenreApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesDiscoverApi(
+        networkJson: Json,
+        client: OkHttpClient,
+    ): DiscoverApi = buildRetrofit(networkJson, client).create(DiscoverApi::class.java)
 
     @Provides
     @Singleton

@@ -2,11 +2,13 @@ package com.muammarahlnn.urflix.core.data.di
 
 import com.muammarahlnn.urflix.core.data.repository.BookmarksRepository
 import com.muammarahlnn.urflix.core.data.repository.FilmDetailsRepository
+import com.muammarahlnn.urflix.core.data.repository.FilmsSectionRepository
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.data.repository.ProfileRepository
 import com.muammarahlnn.urflix.core.data.repository.SearchRepository
 import com.muammarahlnn.urflix.core.data.repository.impl.BookmarksRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.FilmDetailsRepositoryImpl
+import com.muammarahlnn.urflix.core.data.repository.impl.FilmsSectionRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.HomeRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.ProfileRepositoryImpl
 import com.muammarahlnn.urflix.core.data.repository.impl.SearchRepositoryImpl
@@ -48,4 +50,9 @@ interface DataModule {
     fun bindsSearchRepository(
         searchRepository: SearchRepositoryImpl
     ): SearchRepository
+
+    @Binds
+    fun bindsFilmsSectionRepository(
+        filmsSectionRepository: FilmsSectionRepositoryImpl
+    ): FilmsSectionRepository
 }
