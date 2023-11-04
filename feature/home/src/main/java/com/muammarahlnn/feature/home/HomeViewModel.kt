@@ -30,6 +30,10 @@ class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository
 ) : ViewModel() {
 
+    private val _trendingMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
+
+    val trendingMoviesUiState = _trendingMoviesUiState.asStateFlow()
+
     private val _nowPlayingMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
 
     val nowPlayingMoviesUiState = _nowPlayingMoviesUiState.asStateFlow()
@@ -75,6 +79,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetchHomeScreenData() {
+        fetchTrendingMovies()
+
         fetchNowPlayingMovies()
         fetchUpcomingMovies()
         fetchPopularMovies()
@@ -86,6 +92,14 @@ class HomeViewModel @Inject constructor(
         fetchTopRatedTvShows()
 
         fetchGenres()
+    }
+
+    private fun fetchTrendingMovies() {
+        viewModelScope.launch {
+            homeRepository.getTrendingMovies().asResult().collect { result ->
+                handleFetchFilms(result, _trendingMoviesUiState)
+            }
+        }
     }
 
     private fun fetchNowPlayingMovies() {

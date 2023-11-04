@@ -6,6 +6,7 @@ import com.muammarahlnn.urflix.core.network.api.DiscoverApi
 import com.muammarahlnn.urflix.core.network.api.GenreApi
 import com.muammarahlnn.urflix.core.network.api.MovieApi
 import com.muammarahlnn.urflix.core.network.api.SearchApi
+import com.muammarahlnn.urflix.core.network.api.TrendingApi
 import com.muammarahlnn.urflix.core.network.api.TvShowApi
 import com.muammarahlnn.urflix.core.network.interceptor.ApiKeyInterceptor
 import dagger.Module
@@ -63,6 +64,13 @@ object NetworkModule {
         networkJson: Json,
         client: OkHttpClient,
     ): DiscoverApi = buildRetrofit(networkJson, client).create(DiscoverApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesTrendingApi(
+        networkJson: Json,
+        client: OkHttpClient,
+    ): TrendingApi = buildRetrofit(networkJson, client).create(TrendingApi::class.java)
 
     @Provides
     @Singleton

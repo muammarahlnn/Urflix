@@ -4,6 +4,7 @@ import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import com.muammarahlnn.urflix.core.network.api.GenreApi
 import com.muammarahlnn.urflix.core.network.api.MovieApi
+import com.muammarahlnn.urflix.core.network.api.TrendingApi
 import com.muammarahlnn.urflix.core.network.api.TvShowApi
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
 import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
@@ -20,10 +21,12 @@ import javax.inject.Singleton
  * @file HomeNetworkDataSourceImpl, 02/11/2023 12.07 by Muammar Ahlan Abimanyu
  */
 @Singleton
-class HomeNetworkDataSourceImpl @Inject constructor(
+class
+HomeNetworkDataSourceImpl @Inject constructor(
     private val movieApi: MovieApi,
     private val tvShowApi: TvShowApi,
     private val genreApi: GenreApi,
+    private val trendingApi: TrendingApi,
 ) : HomeNetworkDataSource {
 
     override fun getMovies(section: MoviesSection): Flow<List<MovieResponse>> = flow {
@@ -50,5 +53,9 @@ class HomeNetworkDataSourceImpl @Inject constructor(
 
     override fun getTvShowGenres(): Flow<List<GenreResponse>> = flow {
         emit(genreApi.getTvShowGenres().genres)
+    }
+
+    override fun getTrendingMovies(): Flow<List<MovieResponse>> = flow {
+        emit(trendingApi.getTrendingMovies().results)
     }
 }

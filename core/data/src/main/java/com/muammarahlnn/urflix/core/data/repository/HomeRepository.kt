@@ -20,4 +20,6 @@ interface HomeRepository {
     fun getMovieGenres(): Flow<List<GenreModel>>
 
     fun getTvShowGenres(): Flow<List<GenreModel>>
+
+    fun getTrendingMovies(): Flow<List<FilmModel>>
 }

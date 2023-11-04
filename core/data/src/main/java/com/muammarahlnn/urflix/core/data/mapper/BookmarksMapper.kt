@@ -20,6 +20,7 @@ fun FilmEntity.toFilmModel() = FilmModel(
     releaseDate = releaseDate,
     voteAverage = voteAverage,
     posterImage = posterImage,
+    backdropImage = "",
     genreNames = listOf(),
     filmType = FilmType.getFilmType(filmTypeOrdinal)
 )
