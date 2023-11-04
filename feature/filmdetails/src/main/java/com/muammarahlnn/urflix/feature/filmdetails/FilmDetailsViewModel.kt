@@ -45,11 +45,15 @@ class FilmDetailsViewModel @Inject constructor(
 
     val isFilmBookmarked = _isFilmBookmarked.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
-        refreshFilmDetailsScreen()
+        fetchFilmDetailsScreenData()
     }
 
-    fun refreshFilmDetailsScreen() {
+    fun fetchFilmDetailsScreenData() {
         fetchFilmDetailsData()
         loadIsFilmBookmarked()
     }

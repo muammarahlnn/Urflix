@@ -28,6 +28,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -68,6 +73,7 @@ import java.util.Locale
  * @author Muammar Ahlan Abimanyu (muammarahlnn)
  * @file FilmDetailsScreen, 03/11/2023 13.55 by Muammar Ahlan Abimanyu
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun FilmDetailsRoute(
     onBackClick: () -> Unit,
@@ -77,13 +83,21 @@ internal fun FilmDetailsRoute(
 ) {
     val context = LocalContext.current
 
+    val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = viewModel::fetchFilmDetailsScreenData
+    )
+
     val uiState by viewModel.filmDetailsUiState.collectAsStateWithLifecycle()
     val isFilmBookmarked by viewModel.isFilmBookmarked.collectAsStateWithLifecycle()
     FilmDetailsScreen(
         uiState = uiState,
+        pullRefreshState = pullRefreshState,
+        isRefreshing = refreshing,
         isFilmBookmarked = isFilmBookmarked,
         onBackClick = onBackClick,
-        onRefresh = viewModel::refreshFilmDetailsScreen,
+        onRefresh = viewModel::fetchFilmDetailsScreenData,
         onBookmarkClick = { filmDetails ->
             val message: String
             if (isFilmBookmarked) {
@@ -106,9 +120,12 @@ internal fun FilmDetailsRoute(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FilmDetailsScreen(
     uiState: FilmDetailsUiState,
+    pullRefreshState: PullRefreshState,
+    isRefreshing: Boolean,
     isFilmBookmarked: Boolean,
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
@@ -116,42 +133,54 @@ fun FilmDetailsScreen(
     onGenreItemClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (uiState) {
-        FilmDetailsUiState.Loading -> {
-            CircularLoading(
-                modifier = modifier.fillMaxSize()
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        when (uiState) {
+            FilmDetailsUiState.Loading -> {
+                CircularLoading(
+                    modifier = modifier.fillMaxSize()
+                )
+            }
 
-        is FilmDetailsUiState.Success -> {
-            LazyColumn(
-                modifier = modifier.fillMaxSize()
-            ) {
-                item {
-                    FilmDetailsHeaderInfo(
-                        filmDetails = uiState.filmDetails,
-                        isFilmBookmarked = isFilmBookmarked,
-                        onBackClick = onBackClick,
-                        onBookmarkClick = onBookmarkClick,
-                        onGenreItemClick = onGenreItemClick,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
+            is FilmDetailsUiState.Success -> {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    item {
+                        FilmDetailsHeaderInfo(
+                            filmDetails = uiState.filmDetails,
+                            isFilmBookmarked = isFilmBookmarked,
+                            onBackClick = onBackClick,
+                            onBookmarkClick = onBookmarkClick,
+                            onGenreItemClick = onGenreItemClick,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    }
+                    item {
+                        FilmDetailsSynopsis(
+                            uiState.filmDetails.overview
+                        )
+                    }
                 }
-                item {
-                    FilmDetailsSynopsis(
-                        uiState.filmDetails.overview
-                    )
-                }
+            }
+
+            is FilmDetailsUiState.Error -> {
+                ErrorScreen(
+                    text = uiState.message,
+                    onRefresh = onRefresh,
+                    modifier = modifier.fillMaxSize()
+                )
             }
         }
 
-        is FilmDetailsUiState.Error -> {
-            ErrorScreen(
-                text = uiState.message,
-                onRefresh = onRefresh,
-                modifier = modifier.fillMaxSize()
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
