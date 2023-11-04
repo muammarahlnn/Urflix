@@ -35,20 +35,29 @@ import com.muammarahlnn.urflix.feature.homenavigator.R
  */
 @Composable
 internal fun HomeNavigatorRoute(
+    onSeeAllFilmClick: (Int, Int) -> Unit,
     onFilmClick: (Int, Int) -> Unit,
+    onSeeAllGenresClick: (Int) -> Unit,
+    onGenreItemClick: (Int, String, Int) -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HomeNavigator(
         onFilmClick = onFilmClick,
+        onSeeAllFilmClick = onSeeAllFilmClick,
+        onSeeAllGenresClick = onSeeAllGenresClick,
         onCameraActionClick = onCameraActionClick,
+        onGenreItemClick = onGenreItemClick,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun HomeNavigator(
+    onSeeAllFilmClick: (Int, Int) -> Unit,
     onFilmClick: (Int, Int) -> Unit,
+    onSeeAllGenresClick: (Int) -> Unit,
+    onGenreItemClick: (Int, String, Int) -> Unit,
     onCameraActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     state: HomeNavigatorState = rememberHomeNavigatorState(),
@@ -80,6 +89,9 @@ private fun HomeNavigator(
         HomeNavHost(
             state = state,
             onFilmClick = onFilmClick,
+            onSeeAllFilmClick = onSeeAllFilmClick,
+            onSeeAllGenresClick = onSeeAllGenresClick,
+            onGenreItemClick = onGenreItemClick,
             onCameraActionClick = onCameraActionClick,
             modifier = Modifier
                 .fillMaxSize()

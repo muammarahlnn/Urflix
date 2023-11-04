@@ -34,6 +34,7 @@ import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
 import com.muammarahlnn.urflix.core.designsystem.component.ErrorScreen
 import com.muammarahlnn.urflix.core.designsystem.component.NoDataScreen
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
+import com.muammarahlnn.urflix.core.designsystem.util.formatToYear
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.feature.bookmarks.R
@@ -174,6 +175,3 @@ private fun BookmarkedFilmCard(
         }
     }
 }
-
-private fun formatToYear(date: String): String =
-    if (date.isNotEmpty()) date.substring(0, 4) else "-"

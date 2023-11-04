@@ -54,24 +54,10 @@ fun FilmItemCard(
                     model = film.posterImage,
                     modifier = Modifier.fillMaxSize(),
                 )
-                Card(
-                    shape = RoundedCornerShape(bottomStart = 10.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = BlackTrans60
-                    ),
+                VoteAverageText(
+                    voteAverage = film.voteAverage,
                     modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    val formattedVoteAverage = String.format("%.1f", film.voteAverage)
-                    Text(
-                        text = formattedVoteAverage,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(
-                            horizontal = 9.dp,
-                            vertical = 3.dp
-                        )
-                    )
-                }
+                )
             }
         }
 
@@ -84,6 +70,31 @@ fun FilmItemCard(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(0.4f)
+        )
+    }
+}
+
+@Composable
+fun VoteAverageText(
+    voteAverage: Float,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        shape = RoundedCornerShape(bottomStart = 10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = BlackTrans60
+        ),
+        modifier = modifier,
+    ) {
+        val formattedVoteAverage = String.format("%.1f", voteAverage)
+        Text(
+            text = formattedVoteAverage,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(
+                horizontal = 9.dp,
+                vertical = 3.dp
+            )
         )
     }
 }

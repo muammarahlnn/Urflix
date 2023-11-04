@@ -3,6 +3,7 @@ package com.muammarahlnn.urflix.core.data.mapper
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.core.network.BuildConfig
+import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
 import com.muammarahlnn.urflix.core.network.model.response.MovieResponse
 import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
 
@@ -13,36 +14,51 @@ import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
  */
 
 @JvmName("MovieResponsesToFilmModels")
-fun List<MovieResponse>.toFilmModels() = map {
-    it.toFilmModel()
+fun List<MovieResponse>.toFilmModels(
+    movieGenres: List<GenreResponse> = listOf(),
+) = map {
+    it.toFilmModel(movieGenres)
 }
 
 @JvmName("MovieResponseToFilmModel")
-fun MovieResponse.toFilmModel() = FilmModel(
+fun MovieResponse.toFilmModel(
+    movieGenres: List<GenreResponse> = listOf(),
+) = FilmModel(
     id = id,
     title = title.orEmpty(),
     releaseDate = releaseDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toPosterImage().orEmpty(),
-    genreIds = genreIds ?: listOf(),
+    genreNames = genreIds?.toGenreNames(movieGenres) ?: listOf(),
     filmType = FilmType.MOVIES,
 )
 
 @JvmName("TvShowResponsesToFilmModels")
-fun List<TvShowResponse>.toFilmModels() = map {
-    it.toFilmModel()
+fun List<TvShowResponse>.toFilmModels(
+    tvShowGenres: List<GenreResponse> = listOf()
+) = map {
+    it.toFilmModel(tvShowGenres)
 }
 
 @JvmName("TvShowResponseToFilmModel")
-fun TvShowResponse.toFilmModel() = FilmModel(
+fun TvShowResponse.toFilmModel(
+    tvShowGenres: List<GenreResponse> = listOf()
+) = FilmModel(
     id = id,
     title = name.orEmpty(),
     releaseDate = firstAirDate.orEmpty(),
     voteAverage = voteAverage ?: 0f,
     posterImage = posterPath?.toPosterImage().orEmpty(),
-    genreIds = genreIds ?: listOf(),
+    genreNames = genreIds?.toGenreNames(tvShowGenres) ?: listOf(),
     filmType = FilmType.TV_SHOWS,
 )
+
+fun List<Int>.toGenreNames(genres: List<GenreResponse>): List<String> =
+    genres.filter {
+        it.id in this
+    }.map {
+        it.name
+    }
 
 fun String.toPosterImage() = "$IMG_URL/w342$this"
 

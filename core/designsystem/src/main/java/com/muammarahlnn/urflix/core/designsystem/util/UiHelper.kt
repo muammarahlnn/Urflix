@@ -16,3 +16,6 @@ fun Modifier.noRippleClickable(action: () -> Unit) = composed {
         action()
     }
 }
+
+fun formatToYear(date: String): String =
+    if (date.isNotEmpty()) date.substring(0, 4) else "-"

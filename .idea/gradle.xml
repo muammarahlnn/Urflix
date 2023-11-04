@@ -39,6 +39,8 @@
             <option value="$PROJECT_DIR$/feature/bookmarks" />
             <option value="$PROJECT_DIR$/feature/camera" />
             <option value="$PROJECT_DIR$/feature/filmdetails" />
+            <option value="$PROJECT_DIR$/feature/filmssection" />
+            <option value="$PROJECT_DIR$/feature/genres" />
             <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/homenavigator" />
             <option value="$PROJECT_DIR$/feature/profile" />

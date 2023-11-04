@@ -1,9 +1,11 @@
 package com.muammarahlnn.urflix.core.network.di
 
 import com.muammarahlnn.urflix.core.network.datasource.FilmDetailsNetworkDataSource
+import com.muammarahlnn.urflix.core.network.datasource.FilmsSectionNetworkDataSource
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
 import com.muammarahlnn.urflix.core.network.datasource.SearchNetworkDataSource
 import com.muammarahlnn.urflix.core.network.datasource.impl.FilmDetailsNetworkDataSourceImpl
+import com.muammarahlnn.urflix.core.network.datasource.impl.FilmsSectionNetworkDataSourceImpl
 import com.muammarahlnn.urflix.core.network.datasource.impl.HomeNetworkDataSourceImpl
 import com.muammarahlnn.urflix.core.network.datasource.impl.SearchNetworkDataSourceImpl
 import dagger.Binds
@@ -34,4 +36,9 @@ interface NetworkDataSourceModule {
     fun bindsSearchNetworkDataSource(
         searchNetworkDataSource: SearchNetworkDataSourceImpl
     ): SearchNetworkDataSource
+
+    @Binds
+    fun bindsFilmsSectionNetworkDataSource(
+        filmsSectionNetworkDataSource: FilmsSectionNetworkDataSourceImpl
+    ): FilmsSectionNetworkDataSource
 }

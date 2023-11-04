@@ -1,8 +1,10 @@
 package com.muammarahlnn.urflix.core.data.repository.impl
 
 import com.muammarahlnn.urflix.core.data.mapper.toFilmModels
+import com.muammarahlnn.urflix.core.data.mapper.toGenreModels
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.model.data.FilmModel
+import com.muammarahlnn.urflix.core.model.data.GenreModel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
@@ -27,6 +29,16 @@ class HomeRepositoryImpl @Inject constructor(
     override fun getTvShows(section: TvShowsSection): Flow<List<FilmModel>> =
         homeNetworkDataSource.getTvShows(section).map {
             it.toFilmModels()
+        }
+
+    override fun getMovieGenres(): Flow<List<GenreModel>> =
+        homeNetworkDataSource.getMovieGenres().map {
+            it.toGenreModels()
+        }
+
+    override fun getTvShowGenres(): Flow<List<GenreModel>> =
+        homeNetworkDataSource.getTvShowGenres().map {
+            it.toGenreModels()
         }
 
 }

@@ -13,6 +13,12 @@ import com.muammarahlnn.urflix.feature.camera.navigation.cameraScreen
 import com.muammarahlnn.urflix.feature.camera.navigation.navigateToCamera
 import com.muammarahlnn.urflix.feature.filmdetails.navigation.filmsDetailsScreen
 import com.muammarahlnn.urflix.feature.filmdetails.navigation.navigateToFilmDetails
+import com.muammarahlnn.urflix.feature.filmssection.navigation.filmsGenreScreen
+import com.muammarahlnn.urflix.feature.filmssection.navigation.filmsSectionScreen
+import com.muammarahlnn.urflix.feature.filmssection.navigation.navigateToFilmsGenre
+import com.muammarahlnn.urflix.feature.filmssection.navigation.navigateToFilmsSection
+import com.muammarahlnn.urflix.feature.genres.navigation.genresScreen
+import com.muammarahlnn.urflix.feature.genres.navigation.navigateToGenres
 
 
 /**
@@ -56,10 +62,23 @@ internal fun UrflixNavHost(
     ) {
         homeNavigator(
             onFilmClick = navController::navigateToFilmDetails,
+            onSeeAllFilmClick = navController::navigateToFilmsSection,
+            onSeeAllGenresClick = navController::navigateToGenres,
+            onGenreItemClick = navController::navigateToFilmsGenre,
             onCameraActionClick = navController::navigateToCamera
         )
         filmsDetailsScreen(
             onBackClick = navController::popBackStack
+        )
+        filmsSectionScreen(
+            onBackClick = navController::popBackStack
+        )
+        filmsGenreScreen(
+            onBackClick = navController::popBackStack
+        )
+        genresScreen(
+            onBackClick = navController::popBackStack,
+            onGenreItemClick = navController::navigateToFilmsGenre,
         )
         cameraScreen(
             onCameraClosed = navController::navigateUp
