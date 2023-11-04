@@ -66,11 +66,15 @@ class HomeViewModel @Inject constructor(
 
     val genresUiState = _genresUiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
         fetchHomeScreenData()
     }
 
-    private fun fetchHomeScreenData() {
+    fun fetchHomeScreenData() {
         fetchNowPlayingMovies()
         fetchUpcomingMovies()
         fetchPopularMovies()

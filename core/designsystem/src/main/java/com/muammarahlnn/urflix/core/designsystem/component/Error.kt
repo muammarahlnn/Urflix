@@ -3,10 +3,13 @@ package com.muammarahlnn.urflix.core.designsystem.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +57,51 @@ fun ErrorScreen(
         )
 
         Spacer(modifier = Modifier.height(4.dp))
+
+        IconButton(
+            onClick = onRefresh,
+        ) {
+            Icon(
+                imageVector = UrflixIcons.Refresh,
+                contentDescription = stringResource(id = R.string.refresh),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ErrorHomeSection(
+    text: String,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.error_illustration),
+                contentDescription = null,
+                modifier = Modifier.size(82.dp),
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         IconButton(
             onClick = onRefresh,

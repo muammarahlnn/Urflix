@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.muammarahlnn.urflix.core.designsystem.component.CircularLoading
+import com.muammarahlnn.urflix.core.designsystem.component.ErrorHomeSection
 import com.muammarahlnn.urflix.core.designsystem.component.FilmItemCard
 import com.muammarahlnn.urflix.core.designsystem.component.WrappedTabRow
 import com.muammarahlnn.urflix.core.designsystem.icon.UrflixIcons
@@ -47,6 +54,7 @@ import com.muammarahlnn.urflix.feature.home.R
  * @author Muammar Ahlan Abimanyu (muammarahlnn)
  * @file HomeScreen, 02/11/2023 09.30 by Muammar Ahlan Abimanyu
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun HomeRoute(
     onSeeAllFilmClick: (Int, Int) -> Unit,
@@ -104,10 +112,19 @@ internal fun HomeRoute(
 
     val genresSectionUiState by viewModel.genresUiState.collectAsStateWithLifecycle()
 
+    val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = viewModel::fetchHomeScreenData
+    )
+
     HomeScreen(
         moviesSectionsUiData = moviesSectionsUiData,
         tvShowsSectionsUiData = tvShowsSectionsUiData,
         genresSectionUiState = genresSectionUiState,
+        pullRefreshState = pullRefreshState,
+        isRefreshing = refreshing,
+        onRefresh = viewModel::fetchHomeScreenData,
         onSeeAllFilmClick = onSeeAllFilmClick,
         onFilmClick = onFilmClick,
         onSeeAllGenresClick = onSeeAllGenresClick,
@@ -116,42 +133,91 @@ internal fun HomeRoute(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeScreen(
     moviesSectionsUiData: List<MoviesSectionUiData>,
     tvShowsSectionsUiData: List<TvShowsSectionUiData>,
     genresSectionUiState: GenresSectionUiState,
+    pullRefreshState: PullRefreshState,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onSeeAllFilmClick: (Int, Int) -> Unit,
     onFilmClick: (Int, Int) -> Unit,
     onSeeAllGenresClick: (Int) -> Unit,
     onGenreItemClick: (Int, String, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
     ) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        moviesSectionsUiData.forEach { moviesSectionUiData ->
+        LazyColumn(
+            modifier = modifier.fillMaxSize()
+        ) {
             item {
-                FilmsSectionHeader(
-                    section = moviesSectionUiData.moviesSection.displayedText,
-                    filmType = FilmType.MOVIES,
-                    onSeeAllFilmClick = { filmTypeOrdinal ->
-                        onSeeAllFilmClick(
-                            moviesSectionUiData.moviesSection.ordinal,
-                            filmTypeOrdinal,
-                        )
-                    },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
+
+            moviesSectionsUiData.forEach { moviesSectionUiData ->
+                item {
+                    FilmsSectionHeader(
+                        section = moviesSectionUiData.moviesSection.displayedText,
+                        filmType = FilmType.MOVIES,
+                        onSeeAllFilmClick = { filmTypeOrdinal ->
+                            onSeeAllFilmClick(
+                                moviesSectionUiData.moviesSection.ordinal,
+                                filmTypeOrdinal,
+                            )
+                        },
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                item {
+                    FilmsSectionHorizontalList(
+                        uiState = moviesSectionUiData.uiState,
+                        onFilmClick = onFilmClick,
+                        onRefresh = onRefresh,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
+            }
+
+            tvShowsSectionsUiData.forEach { tvShowsSectionUiData ->
+                item {
+                    FilmsSectionHeader(
+                        section = tvShowsSectionUiData.tvShowsSection.displayedText,
+                        filmType = FilmType.TV_SHOWS,
+                        onSeeAllFilmClick = { filmTypeOrdinal ->
+                            onSeeAllFilmClick(
+                                tvShowsSectionUiData.tvShowsSection.ordinal,
+                                filmTypeOrdinal,
+                            )
+                        },
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                item {
+                    FilmsSectionHorizontalList(
+                        uiState = tvShowsSectionUiData.uiState,
+                        onFilmClick = onFilmClick,
+                        onRefresh = onRefresh,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
+            }
+
             item {
-                FilmsSectionHorizontalList(
-                    uiState = moviesSectionUiData.uiState,
-                    onFilmClick = onFilmClick,
+                GenresSectionContent(
+                    uiState = genresSectionUiState,
+                    onSeeAllGenresClick = onSeeAllGenresClick,
+                    onGenreItemClick = onGenreItemClick,
+                    onRefresh = onRefresh,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
@@ -159,41 +225,11 @@ private fun HomeScreen(
             }
         }
 
-        tvShowsSectionsUiData.forEach { tvShowsSectionUiData ->
-            item {
-                FilmsSectionHeader(
-                    section = tvShowsSectionUiData.tvShowsSection.displayedText,
-                    filmType = FilmType.TV_SHOWS,
-                    onSeeAllFilmClick = { filmTypeOrdinal ->
-                        onSeeAllFilmClick(
-                            tvShowsSectionUiData.tvShowsSection.ordinal,
-                            filmTypeOrdinal,
-                        )
-                    },
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-            item {
-                FilmsSectionHorizontalList(
-                    uiState = tvShowsSectionUiData.uiState,
-                    onFilmClick = onFilmClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
-            }
-        }
-
-        item {
-            GenresSectionContent(
-                uiState = genresSectionUiState,
-                onSeeAllGenresClick = onSeeAllGenresClick,
-                onGenreItemClick = onGenreItemClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -201,6 +237,7 @@ private fun HomeScreen(
 private fun FilmsSectionHorizontalList(
     uiState: FilmsSectionUiState,
     onFilmClick: (Int, Int) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -232,7 +269,15 @@ private fun FilmsSectionHorizontalList(
             }
         }
 
-        is FilmsSectionUiState.Error -> Unit
+        is FilmsSectionUiState.Error -> {
+            ErrorHomeSection(
+                text = uiState.message,
+                onRefresh = onRefresh,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(filmItemHeight)
+            )
+        }
     }
 }
 
@@ -283,6 +328,7 @@ private fun GenresSectionContent(
     uiState: GenresSectionUiState,
     onSeeAllGenresClick: (Int) -> Unit,
     onGenreItemClick: (Int, String, Int) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -366,7 +412,15 @@ private fun GenresSectionContent(
                 )
             }
 
-            is GenresSectionUiState.Error -> Unit
+            is GenresSectionUiState.Error -> {
+                ErrorHomeSection(
+                    text = uiState.message,
+                    onRefresh = onRefresh,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(filmItemHeight)
+                )
+            }
         }
     }
 }
