@@ -40,9 +40,7 @@ fun NavController.navigateToFilmsGenre(
     genreName: String,
     filmTypeOrdinal: Int,
 ) {
-    this.navigate("$FILMS_GENRE_ROUTE/$genreId/$genreName/$filmTypeOrdinal") {
-        launchSingleTop = true
-    }
+    this.navigate("$FILMS_GENRE_ROUTE/$genreId/$genreName/$filmTypeOrdinal")
 }
 
 fun NavGraphBuilder.filmsGenreScreen(

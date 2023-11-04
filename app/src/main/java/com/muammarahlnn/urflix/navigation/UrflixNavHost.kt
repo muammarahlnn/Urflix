@@ -68,7 +68,8 @@ internal fun UrflixNavHost(
             onCameraActionClick = navController::navigateToCamera
         )
         filmsDetailsScreen(
-            onBackClick = navController::popBackStack
+            onBackClick = navController::popBackStack,
+            onGenreItemClick = navController::navigateToFilmsGenre,
         )
         filmsSectionScreen(
             onBackClick = navController::popBackStack,

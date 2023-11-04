@@ -35,7 +35,7 @@ class FilmDetailsViewModel @Inject constructor(
 
     private val filmId = args.filmId
 
-    private val filmType = FilmType.getFilmType(args.filmTypeOrdinal)
+    val filmType = FilmType.getFilmType(args.filmTypeOrdinal)
 
     private val _filmDetailsUiState = MutableStateFlow<FilmDetailsUiState>(FilmDetailsUiState.Loading)
 

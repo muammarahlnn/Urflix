@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,6 +71,7 @@ import java.util.Locale
 @Composable
 internal fun FilmDetailsRoute(
     onBackClick: () -> Unit,
+    onGenreItemClick: (Int, String, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FilmDetailsViewModel = hiltViewModel()
 ) {
@@ -93,6 +95,13 @@ internal fun FilmDetailsRoute(
             }
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         },
+        onGenreItemClick = { genreId, genreName ->
+            onGenreItemClick(
+                genreId,
+                genreName,
+                viewModel.filmType.ordinal
+            )
+        },
         modifier = modifier,
     )
 }
@@ -104,6 +113,7 @@ fun FilmDetailsScreen(
     onBackClick: () -> Unit,
     onRefresh: () -> Unit,
     onBookmarkClick: (FilmDetailsModel) -> Unit,
+    onGenreItemClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -123,6 +133,7 @@ fun FilmDetailsScreen(
                         isFilmBookmarked = isFilmBookmarked,
                         onBackClick = onBackClick,
                         onBookmarkClick = onBookmarkClick,
+                        onGenreItemClick = onGenreItemClick,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
@@ -150,6 +161,7 @@ private fun FilmDetailsHeaderInfo(
     isFilmBookmarked: Boolean,
     onBackClick: () -> Unit,
     onBookmarkClick: (FilmDetailsModel) -> Unit,
+    onGenreItemClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -183,6 +195,7 @@ private fun FilmDetailsHeaderInfo(
             duration = filmDetails.duration,
             voteAverage = filmDetails.voteAverage,
             genres = filmDetails.genres,
+            onGenreItemClick = onGenreItemClick,
             modifier = Modifier
                 .padding(
                     top = backdropImageCarouselHeight + 16.dp,
@@ -315,6 +328,7 @@ private fun FilmDetailsDataContent(
     duration: Int,
     voteAverage: Float,
     genres: List<GenreModel>,
+    onGenreItemClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -384,15 +398,21 @@ private fun FilmDetailsDataContent(
             items(
                 items = genres,
                 key = { it.id }
-            ) {
-                GenreItem(it)
+            ) { genre ->
+                GenreItem(
+                    genre = genre,
+                    onGenreItemClick = onGenreItemClick,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun GenreItem(genre: GenreModel) {
+private fun GenreItem(
+    genre: GenreModel,
+    onGenreItemClick: (Int, String) -> Unit,
+) {
     Text(
         text = genre.name,
         style = MaterialTheme.typography.labelMedium,
@@ -404,6 +424,12 @@ private fun GenreItem(genre: GenreModel) {
                 color = MaterialTheme.colorScheme.onSurface,
                 shape = RoundedCornerShape(5.dp)
             )
+            .clickable {
+                onGenreItemClick(
+                    genre.id,
+                    genre.name
+                )
+            }
             .padding(
                 vertical = 4.dp,
                 horizontal = 8.dp,
