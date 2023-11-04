@@ -16,6 +16,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,66 +49,89 @@ import com.muammarahlnn.urflix.feature.bookmarks.R
  * @author Muammar Ahlan Abimanyu (muammarahlnn)
  * @file BookmarksScreen, 02/11/2023 09.33 by Muammar Ahlan Abimanyu
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun BookmarksRoute(
     onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BookmarksViewModel = hiltViewModel(),
 ) {
+    val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = viewModel::loadBookmarkedFilms
+    )
     val uiState by viewModel.bookmarksUiState.collectAsStateWithLifecycle()
     BookmarksScreen(
         uiState = uiState,
+        pullRefreshState = pullRefreshState,
+        isRefreshing = refreshing,
         onRefresh = viewModel::loadBookmarkedFilms,
         onFilmClick = onFilmClick,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun BookmarksScreen(
     uiState: BookmarksUiState,
+    pullRefreshState: PullRefreshState,
+    isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onFilmClick: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (uiState) {
-        BookmarksUiState.Loading -> {
-            CircularLoading(
-                modifier = modifier.fillMaxSize()
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        when (uiState) {
+            BookmarksUiState.Loading -> {
+                CircularLoading(
+                    modifier = modifier.fillMaxSize()
+                )
+            }
 
-        is BookmarksUiState.Success -> {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier.fillMaxSize()
-            ) {
-                items(
-                    items = uiState.films,
-                ) { film ->
-                    BookmarkedFilmCard(
-                        film = film,
-                        onFilmClick =  onFilmClick,
-                    )
+            is BookmarksUiState.Success -> {
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    items(
+                        items = uiState.films,
+                    ) { film ->
+                        BookmarkedFilmCard(
+                            film = film,
+                            onFilmClick =  onFilmClick,
+                        )
+                    }
                 }
+            }
+
+            is BookmarksUiState.SuccessEmpty -> {
+                NoDataScreen(
+                    text = uiState.message,
+                    modifier = modifier.fillMaxSize()
+                )
+            }
+
+            is BookmarksUiState.Error -> {
+                ErrorScreen(
+                    text = uiState.message,
+                    onRefresh = onRefresh,
+                    modifier = modifier.fillMaxSize()
+                )
             }
         }
 
-        is BookmarksUiState.SuccessEmpty -> {
-            NoDataScreen(
-                text = uiState.message,
-                modifier = modifier.fillMaxSize()
-            )
-        }
-
-        is BookmarksUiState.Error -> {
-            ErrorScreen(
-                text = uiState.message,
-                onRefresh = onRefresh,
-                modifier = modifier.fillMaxSize()
-            )
-        }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 

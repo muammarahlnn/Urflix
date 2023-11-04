@@ -29,6 +29,10 @@ class BookmarksViewModel @Inject constructor(
 
     val bookmarksUiState = _bookmarksUiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
         loadBookmarkedFilms()
     }
