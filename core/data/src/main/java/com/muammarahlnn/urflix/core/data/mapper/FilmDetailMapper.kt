@@ -39,7 +39,7 @@ fun TvShowDetailsResponse.toFilmDetailsModel(
     id = id,
     title = name,
     releaseDate = firstAirDate.orEmpty(),
-    duration = runtime ?: 0,
+    duration = lastEpisodeToAir?.runtime ?: 0,
     voteAverage = voteAverage ?: 0f,
     overview = overview.orEmpty(),
     posterImage = posterPath?.toPosterImage().orEmpty(),
