@@ -18,7 +18,7 @@ enum class FilmType(
             when (filmTypeOrdinal) {
                 MOVIES.ordinal -> MOVIES
                 TV_SHOWS.ordinal -> TV_SHOWS
-                else -> throw IllegalStateException("FilmType not found.")
+                else -> throw IllegalArgumentException("FilmType not found.")
             }
     }
 }

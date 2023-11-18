@@ -19,7 +19,7 @@ enum class MoviesSection(val displayedText: String) {
                 UPCOMING.ordinal -> UPCOMING
                 POPULAR.ordinal -> POPULAR
                 TOP_RATED.ordinal -> TOP_RATED
-                else -> throw IllegalStateException("MoviesSection not found.")
+                else -> throw IllegalArgumentException("MoviesSection not found.")
             }
     }
 }

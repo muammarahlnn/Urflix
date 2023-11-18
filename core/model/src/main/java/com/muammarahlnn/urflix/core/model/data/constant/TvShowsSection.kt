@@ -19,7 +19,7 @@ enum class TvShowsSection(val displayedText: String) {
                 ON_THE_AIR.ordinal -> ON_THE_AIR
                 POPULAR.ordinal -> POPULAR
                 TOP_RATED.ordinal -> TOP_RATED
-                else -> throw IllegalStateException("TvShowsSection not found.")
+                else -> throw IllegalArgumentException("TvShowsSection not found.")
             }
     }
 }
