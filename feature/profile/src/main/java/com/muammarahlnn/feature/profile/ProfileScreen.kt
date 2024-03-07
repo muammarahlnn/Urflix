@@ -78,6 +78,8 @@ internal fun ProfileRoute(
 
     // from camera
     LaunchedEffect(isPhotoExists(context)) {
+        // wrap with coroutine scope to make sure save photo profile is finished
+        // then delete from temp file
         if (isPhotoExists(context)) {
             val photoProfileUriFromCamera = Uri.fromFile(getFilePhoto(context))
             viewModel.savePhotoProfileUser(photoProfileUriFromCamera)
