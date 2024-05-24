@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.muammarahlnn.feature.home.composable.FilmsSectionHeader
 import com.muammarahlnn.feature.home.composable.FilmsSectionHorizontalList
 import com.muammarahlnn.feature.home.composable.GenresSectionContent
+import com.muammarahlnn.feature.home.composable.PeopleSectionContent
 import com.muammarahlnn.feature.home.composable.TrendingFilmsCarousel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
@@ -215,6 +216,14 @@ private fun HomeScreen(
                     onSeeAllGenresClick = onSeeAllGenresClick,
                     onGenreItemClick = onGenreItemClick,
                     onRefresh = onRefresh,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+            }
+
+            item {
+                PeopleSectionContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
