@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muammarahlnn.urflix.core.common.result.Result
+import com.muammarahlnn.urflix.core.common.result.UiState
 import com.muammarahlnn.urflix.core.common.result.asResult
 import com.muammarahlnn.urflix.core.common.result.onError
 import com.muammarahlnn.urflix.core.common.result.onLoading
 import com.muammarahlnn.urflix.core.common.result.onSuccess
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.model.data.FilmModel
+import com.muammarahlnn.urflix.core.model.data.PersonModel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,47 +33,39 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _trendingMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val trendingMoviesUiState = _trendingMoviesUiState.asStateFlow()
 
     private val _nowPlayingMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val nowPlayingMoviesUiState = _nowPlayingMoviesUiState.asStateFlow()
 
     private val _upcomingMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val upcomingMoviesUiState = _upcomingMoviesUiState.asStateFlow()
 
     private val _popularMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val popularMoviesUiState = _popularMoviesUiState.asStateFlow()
 
     private val _topRatedMoviesUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val topRatedMoviesUiState = _topRatedMoviesUiState.asStateFlow()
 
     private val _airingTodayTvShowsUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val airingTodayTvShowsUiState = _airingTodayTvShowsUiState.asStateFlow()
 
     private val _onTheAirTvShowsUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val onTheAirTvShowsUiState = _onTheAirTvShowsUiState.asStateFlow()
 
     private val _popularTvShowsUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val popularTvShowsUiState = _popularTvShowsUiState.asStateFlow()
 
     private val _topRatedTvShowsUiState = MutableStateFlow<FilmsSectionUiState>(FilmsSectionUiState.Loading)
-
     val topRatedTvShowsUiState = _topRatedTvShowsUiState.asStateFlow()
 
     private val _genresUiState = MutableStateFlow<GenresSectionUiState>(GenresSectionUiState.Loading)
-
     val genresUiState = _genresUiState.asStateFlow()
 
-    private val _isRefreshing = MutableStateFlow(false)
+    private val _popularPeopleUiState = MutableStateFlow<PeopleSectionUiState>(UiState.Loading)
+    val popularPeopleUiState = _popularPeopleUiState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
     init {
@@ -80,18 +74,16 @@ class HomeViewModel @Inject constructor(
 
     fun fetchHomeScreenData() {
         fetchTrendingMovies()
-
         fetchNowPlayingMovies()
         fetchUpcomingMovies()
         fetchPopularMovies()
         fetchTopRatedMovies()
-
         fetchAiringTodayTvShows()
         fetchOnTheAirTvShows()
         fetchPopularTvShows()
         fetchTopRatedTvShows()
-
         fetchGenres()
+        fetchPopularPeople()
     }
 
     private fun fetchTrendingMovies() {
@@ -166,6 +158,26 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun handleFetchFilms(
+        resultFilms: Result<List<FilmModel>>,
+        filmsUiState: MutableStateFlow<FilmsSectionUiState>,
+    ) {
+        resultFilms.onLoading {
+            filmsUiState.update {
+                FilmsSectionUiState.Loading
+            }
+        }.onSuccess { films ->
+            filmsUiState.update {
+                FilmsSectionUiState.Success(films)
+            }
+        }.onError { exception, message ->
+            Log.e("HomeViewModel", exception?.message.toString())
+            filmsUiState.update {
+                FilmsSectionUiState.Error(message)
+            }
+        }
+    }
+
     private fun fetchGenres() {
         viewModelScope.launch {
             combine(
@@ -197,22 +209,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleFetchFilms(
-        resultFilms: Result<List<FilmModel>>,
-        filmsUiState: MutableStateFlow<FilmsSectionUiState>,
-    ) {
-        resultFilms.onLoading {
-            filmsUiState.update {
-                FilmsSectionUiState.Loading
-            }
-        }.onSuccess { films ->
-            filmsUiState.update {
-                FilmsSectionUiState.Success(films)
-            }
-        }.onError { exception, message ->
-            Log.e("HomeViewModel", exception?.message.toString())
-            filmsUiState.update {
-                FilmsSectionUiState.Error(message)
+    private fun fetchPopularPeople() {
+        viewModelScope.launch {
+            homeRepository.getPopularPeople().asResult().collect { result ->
+                result.onLoading {
+                    _popularPeopleUiState.update { UiState.Loading }
+                }.onSuccess { popularPeople ->
+                    _popularPeopleUiState.update {
+                        UiState.Success(popularPeople)
+                    }
+                }.onError { exception, message ->
+                    Log.e("HomeViewModel", exception?.message.toString())
+                    _popularPeopleUiState.update {
+                        UiState.Error(message)
+                    }
+                }
             }
         }
     }

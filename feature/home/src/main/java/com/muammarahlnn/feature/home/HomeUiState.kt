@@ -1,7 +1,9 @@
 package com.muammarahlnn.feature.home
 
+import com.muammarahlnn.urflix.core.common.result.UiState
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.data.GenreModel
+import com.muammarahlnn.urflix.core.model.data.PersonModel
 
 
 /**
@@ -28,3 +30,5 @@ sealed interface GenresSectionUiState {
 
     data class Error(val message: String) : GenresSectionUiState
 }
+
+typealias PeopleSectionUiState = UiState<List<PersonModel>>

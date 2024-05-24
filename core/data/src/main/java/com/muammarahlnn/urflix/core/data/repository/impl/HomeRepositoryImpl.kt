@@ -2,9 +2,11 @@ package com.muammarahlnn.urflix.core.data.repository.impl
 
 import com.muammarahlnn.urflix.core.data.mapper.toFilmModels
 import com.muammarahlnn.urflix.core.data.mapper.toGenreModels
+import com.muammarahlnn.urflix.core.data.mapper.toPersonModels
 import com.muammarahlnn.urflix.core.data.repository.HomeRepository
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.data.GenreModel
+import com.muammarahlnn.urflix.core.model.data.PersonModel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import com.muammarahlnn.urflix.core.network.datasource.HomeNetworkDataSource
@@ -46,4 +48,8 @@ class HomeRepositoryImpl @Inject constructor(
             it.toFilmModels()
         }
 
+    override fun getPopularPeople(): Flow<List<PersonModel>> =
+        homeNetworkDataSource.getPopularPeople().map {
+            it.toPersonModels()
+        }
 }

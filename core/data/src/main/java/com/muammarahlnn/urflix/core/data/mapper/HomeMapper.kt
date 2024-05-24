@@ -1,10 +1,12 @@
 package com.muammarahlnn.urflix.core.data.mapper
 
 import com.muammarahlnn.urflix.core.model.data.FilmModel
+import com.muammarahlnn.urflix.core.model.data.PersonModel
 import com.muammarahlnn.urflix.core.model.ui.FilmType
 import com.muammarahlnn.urflix.core.network.BuildConfig
 import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
 import com.muammarahlnn.urflix.core.network.model.response.MovieResponse
+import com.muammarahlnn.urflix.core.network.model.response.PersonResponse
 import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
 
 
@@ -61,6 +63,16 @@ fun List<Int>.toGenreNames(genres: List<GenreResponse>): List<String> =
     }.map {
         it.name
     }
+
+fun List<PersonResponse>.toPersonModels() = map {
+    it.toPersonModel()
+}
+
+fun PersonResponse.toPersonModel() = PersonModel(
+    id = id,
+    name = name.orEmpty(),
+    profileImage = profilePath?.toPosterImage().orEmpty(),
+)
 
 fun String.toPosterImage() = "$IMG_URL/w342$this"
 

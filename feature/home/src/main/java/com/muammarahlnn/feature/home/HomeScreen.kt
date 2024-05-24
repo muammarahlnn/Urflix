@@ -1,6 +1,8 @@
 package com.muammarahlnn.feature.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,7 +45,6 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val trendingMoviesUiState by viewModel.trendingMoviesUiState.collectAsStateWithLifecycle()
-
     val nowPlayingMoviesUiState by viewModel.nowPlayingMoviesUiState.collectAsStateWithLifecycle()
     val upcomingMoviesUiState by viewModel.upcomingMoviesUiState.collectAsStateWithLifecycle()
     val popularMoviesUiState by viewModel.popularMoviesUiState.collectAsStateWithLifecycle()
@@ -65,7 +67,6 @@ internal fun HomeRoute(
             uiState = topRatedMoviesUiState,
         ),
     )
-
     val airingTodayTvShowsUiState by viewModel.airingTodayTvShowsUiState.collectAsStateWithLifecycle()
     val onTheAirTvShowsUiState by viewModel.onTheAirTvShowsUiState.collectAsStateWithLifecycle()
     val popularTvShowsUiState by viewModel.popularTvShowsUiState.collectAsStateWithLifecycle()
@@ -88,8 +89,8 @@ internal fun HomeRoute(
             uiState = topRatedTvShowsUiState,
         ),
     )
-
     val genresSectionUiState by viewModel.genresUiState.collectAsStateWithLifecycle()
+    val peopleSectionUiState by viewModel.popularPeopleUiState.collectAsStateWithLifecycle()
 
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullRefreshState = rememberPullRefreshState(
@@ -102,6 +103,7 @@ internal fun HomeRoute(
         moviesSectionsUiData = moviesSectionsUiData,
         tvShowsSectionsUiData = tvShowsSectionsUiData,
         genresSectionUiState = genresSectionUiState,
+        peopleSectionUiState = peopleSectionUiState,
         pullRefreshState = pullRefreshState,
         isRefreshing = refreshing,
         onRefresh = viewModel::fetchHomeScreenData,
@@ -130,6 +132,7 @@ private fun HomeScreen(
     moviesSectionsUiData: List<MoviesSectionUiData>,
     tvShowsSectionsUiData: List<TvShowsSectionUiData>,
     genresSectionUiState: GenresSectionUiState,
+    peopleSectionUiState: PeopleSectionUiState,
     pullRefreshState: PullRefreshState,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
@@ -139,12 +142,14 @@ private fun HomeScreen(
     onGenreItemClick: (Int, String, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
+            contentPadding = PaddingValues(bottom = 16.dp),
             modifier = modifier.fillMaxSize()
         ) {
             item {
@@ -224,9 +229,13 @@ private fun HomeScreen(
 
             item {
                 PeopleSectionContent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
+                    uiState = peopleSectionUiState,
+                    onSeeAllPeopleClick = {},
+                    onPersonClick = { person ->
+                        Toast.makeText(context, person.name, Toast.LENGTH_SHORT).show()
+                    },
+                    onRefresh = onRefresh,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

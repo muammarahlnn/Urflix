@@ -4,6 +4,7 @@ import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import com.muammarahlnn.urflix.core.network.model.response.GenreResponse
 import com.muammarahlnn.urflix.core.network.model.response.MovieResponse
+import com.muammarahlnn.urflix.core.network.model.response.PersonResponse
 import com.muammarahlnn.urflix.core.network.model.response.TvShowResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -23,4 +24,6 @@ interface HomeNetworkDataSource {
     fun getTvShowGenres(): Flow<List<GenreResponse>>
 
     fun getTrendingMovies(): Flow<List<MovieResponse>>
+
+    fun getPopularPeople(): Flow<List<PersonResponse>>
 }

@@ -2,6 +2,7 @@ package com.muammarahlnn.urflix.core.data.repository
 
 import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.data.GenreModel
+import com.muammarahlnn.urflix.core.model.data.PersonModel
 import com.muammarahlnn.urflix.core.model.data.constant.MoviesSection
 import com.muammarahlnn.urflix.core.model.data.constant.TvShowsSection
 import kotlinx.coroutines.flow.Flow
@@ -22,4 +23,6 @@ interface HomeRepository {
     fun getTvShowGenres(): Flow<List<GenreModel>>
 
     fun getTrendingMovies(): Flow<List<FilmModel>>
+
+    fun getPopularPeople(): Flow<List<PersonModel>>
 }

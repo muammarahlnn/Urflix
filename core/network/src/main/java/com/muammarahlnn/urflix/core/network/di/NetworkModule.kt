@@ -5,6 +5,7 @@ import com.muammarahlnn.urflix.core.network.BuildConfig
 import com.muammarahlnn.urflix.core.network.api.DiscoverApi
 import com.muammarahlnn.urflix.core.network.api.GenreApi
 import com.muammarahlnn.urflix.core.network.api.MovieApi
+import com.muammarahlnn.urflix.core.network.api.PersonApi
 import com.muammarahlnn.urflix.core.network.api.SearchApi
 import com.muammarahlnn.urflix.core.network.api.TrendingApi
 import com.muammarahlnn.urflix.core.network.api.TvShowApi
@@ -71,6 +72,13 @@ object NetworkModule {
         networkJson: Json,
         client: OkHttpClient,
     ): TrendingApi = buildRetrofit(networkJson, client).create(TrendingApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesPersonApi(
+        networkJson: Json,
+        client: OkHttpClient,
+    ): PersonApi = buildRetrofit(networkJson, client).create(PersonApi::class.java)
 
     @Provides
     @Singleton
