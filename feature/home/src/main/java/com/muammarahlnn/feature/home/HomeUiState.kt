@@ -1,12 +1,22 @@
 package com.muammarahlnn.feature.home
 
+import com.muammarahlnn.urflix.core.model.data.FilmModel
 import com.muammarahlnn.urflix.core.model.data.GenreModel
 
 
 /**
  * @author Muammar Ahlan Abimanyu (muammarahlnn)
- * @file GenresSectionUiState, 04/11/2023 09.23 by Muammar Ahlan Abimanyu
+ * @file FilmSectionUiState, 02/11/2023 15.21 by Muammar Ahlan Abimanyu
  */
+sealed interface FilmsSectionUiState {
+
+    data object Loading : FilmsSectionUiState
+
+    data class Success(val films: List<FilmModel>) : FilmsSectionUiState
+
+    data class Error(val message: String) : FilmsSectionUiState
+}
+
 sealed interface GenresSectionUiState {
 
     data object Loading : GenresSectionUiState
